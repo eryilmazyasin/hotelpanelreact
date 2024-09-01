@@ -12,7 +12,8 @@ import Settings from "./pages/Admin/Settings.tsx";
 import Profile from "./pages/Admin/Profile.tsx";
 import UnauthPage from "./pages/Unauth/UnauthPage.tsx";
 import PrivateRoute from "./routes/PrivateRoute.tsx";
-import Login from "./pages/Auth/login.tsx";
+import Login from "./pages/Auth/Login.tsx";
+import Logout from "./pages/Auth/Logout.tsx";
 import { AuthProvider } from "./context/authContext.tsx";
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
               <Route path="home" element={<HomePage />} />
               <Route path="settings" element={<Settings />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="logout" element={<Logout />} />
             </Route>
           </Route>
 

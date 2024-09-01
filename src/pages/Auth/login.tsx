@@ -13,12 +13,15 @@ import {
 } from "@mui/material";
 
 import { useAuth } from "../../hooks/useAuth.ts";
+import useLogin from "../../hooks/useLogin.ts";
 
-const Login: React.FC = () => {
+const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const { mutate: mutateLogin } = useLogin();
 
   const { login } = useAuth();
 
@@ -29,12 +32,22 @@ const Login: React.FC = () => {
     const dummyUsername = "admin";
     const dummyPassword = "password123";
 
-    if (username === dummyUsername && password === dummyPassword) {
-      login(); // AuthContext'teki login fonksiyonunu çağırıyoruz
-      navigate("/home"); // Giriş başarılıysa home sayfasına yönlendiriyoruz
-    } else {
-      setError("Giriş bilgileri hatalı.");
-    }
+    // if (username === dummyUsername && password === dummyPassword) {
+    //   login(); // AuthContext'teki login fonksiyonunu çağırıyoruz
+    //   navigate("/home"); // Giriş başarılıysa home sayfasına yönlendiriyoruz
+    // } else {
+    //   setError("Giriş bilgileri hatalı.");
+    // }
+
+    mutateLogin(
+      { name: username, password },
+      {
+        onError: (error: any) => {
+          // Giriş başarısız, hatayı setError ile set ediyoruz
+          setError("Giriş bilgileri hatalı. Lütfen tekrar deneyin.");
+        },
+      }
+    );
   };
 
   return (

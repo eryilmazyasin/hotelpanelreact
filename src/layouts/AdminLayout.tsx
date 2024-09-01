@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
 import HomeIcon from "@mui/icons-material/Home";
+import LogoutIcon from "@mui/icons-material/Logout"; // Logout iconu ekleyin
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -35,7 +36,7 @@ const AdminLayout: React.FC = () => {
     <div>
       <Toolbar>
         <Typography variant="h6" noWrap>
-          Admin Panel
+          Hotel Zeki Panel
         </Typography>
       </Toolbar>
       <Divider />
@@ -57,6 +58,15 @@ const AdminLayout: React.FC = () => {
             <PersonIcon />
           </ListItemIcon>
           <ListItemText primary="Profil" />
+        </ListItem>
+        <Divider />
+        <ListItem component={Link} to="logout">
+          {" "}
+          {/* Logout route'u ekleyin */}
+          <ListItemIcon>
+            <LogoutIcon />
+          </ListItemIcon>
+          <ListItemText primary="Çıkış Yap" />
         </ListItem>
       </List>
     </div>
