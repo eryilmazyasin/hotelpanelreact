@@ -1,0 +1,32 @@
+$drawer-width: 240px;
+
+.container {
+  display: flex;
+}
+
+.mainContent {
+  flex-grow: 1;
+  padding: 16px;
+  margin-left: $drawer-width;
+
+  @media (max-width: 600px) {
+    margin-left: 0;
+  }
+}
+
+.appBar {
+  width: calc(100% - #{$drawer-width});
+  margin-left: $drawer-width;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.drawer {
+  .MuiDrawer-paper {
+    box-sizing: border-box;
+    width: $drawer-width;
+  }
+}
