@@ -6,7 +6,6 @@ interface ILoginUser {
 }
 
 export const postLoginUser = async (params: ILoginUser) => {
-  console.log({ params });
   const response = await axios.post("/auth/login", params);
   console.log({ response });
   return response.data;

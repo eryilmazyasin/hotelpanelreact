@@ -1,9 +1,18 @@
-import React, { createContext, FC, ReactNode, useState } from "react";
+import React, {
+  createContext,
+  FC,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
+import { useNavigate } from "react-router-dom";
+
+import axios from "axios";
 
 // AuthContext için kullanılacak tür tanımlamaları
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
+  login: (token: string) => void;
   logout: () => void;
 }
 
@@ -24,13 +33,30 @@ interface AuthProviderProps {
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const login = () => {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+  const login = (token: string) => {
+    localStorage.setItem("token", token);
     setIsAuthenticated(true);
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
+  const logout = async () => {
+    try {
+      localStorage.removeItem("token");
+      setIsAuthenticated(false);
+      navigate("/login");
+    } catch (error) {
+      console.error("Çıkış yapılırken bir hata oluştu:", error);
+    }
   };
 
   return (

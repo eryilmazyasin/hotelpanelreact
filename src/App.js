@@ -1,4 +1,3 @@
-// App.js
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -18,8 +17,8 @@ import { AuthProvider } from "./context/authContext.tsx";
 
 const App = () => {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
@@ -28,8 +27,7 @@ const App = () => {
           {/* Private Routes */}
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<AdminLayout />}>
-              <Route index element={<Navigate to="home" />} />{" "}
-              {/* Anasayfa yönlendirmesi */}
+              <Route index element={<Navigate to="home" />} />
               <Route path="home" element={<HomePage />} />
               <Route path="settings" element={<Settings />} />
               <Route path="profile" element={<Profile />} />
@@ -40,8 +38,8 @@ const App = () => {
           {/* Eğer kullanıcı yanlış bir rotaya giderse yönlendirme */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 };
 

@@ -12,7 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useAuth } from "../../hooks/useAuth.ts";
 import useLogin from "../../hooks/useLogin.ts";
 
 const Login = () => {
@@ -23,27 +22,21 @@ const Login = () => {
 
   const { mutate: mutateLogin } = useLogin();
 
-  const { login } = useAuth();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-
-    // Dummy login bilgileri
-    const dummyUsername = "admin";
-    const dummyPassword = "password123";
-
-    // if (username === dummyUsername && password === dummyPassword) {
-    //   login(); // AuthContext'teki login fonksiyonunu çağırıyoruz
-    //   navigate("/home"); // Giriş başarılıysa home sayfasına yönlendiriyoruz
-    // } else {
-    //   setError("Giriş bilgileri hatalı.");
-    // }
 
     mutateLogin(
       { name: username, password },
       {
-        onError: (error: any) => {
-          // Giriş başarısız, hatayı setError ile set ediyoruz
+        onSuccess: (data) => {
+          // Backend'den dönen JWT'yi al ve localStorage'a kaydet
+          localStorage.setItem("token", data.token);
+
+          // Kullanıcıyı yönlendir
+          navigate("/home");
+        },
+        onError: (error) => {
+          console.log({ error });
           setError("Giriş bilgileri hatalı. Lütfen tekrar deneyin.");
         },
       }

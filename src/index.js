@@ -11,7 +11,20 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 // Axios global ayarlar
 axios.defaults.baseURL = "http://localhost:5001";
-axios.defaults.withCredentials = true;
+
+// Her istek öncesi token'ı Authorization başlığına ekleyelim
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 root.render(
   <React.StrictMode>
