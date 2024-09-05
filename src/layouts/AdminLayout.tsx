@@ -20,8 +20,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-
-import styles from "./AdminLayout.module.scss";
+import "./AdminLayout.scss";
 
 const drawerWidth = 240;
 
@@ -73,9 +72,9 @@ const AdminLayout: React.FC = () => {
   );
 
   return (
-    <Box className={styles.container}>
+    <Box className="container">
       <CssBaseline />
-      <AppBar position="fixed" className={styles.appBar}>
+      <AppBar position="fixed" className="appBar">
         <Toolbar>
           <IconButton
             color="inherit"
@@ -98,7 +97,7 @@ const AdminLayout: React.FC = () => {
         ModalProps={{
           keepMounted: true, // Mobilde daha iyi performans için
         }}
-        className={styles.drawer}
+        className="drawer"
         sx={{
           display: { xs: "block", sm: "none" },
         }}
@@ -107,7 +106,7 @@ const AdminLayout: React.FC = () => {
       </Drawer>
       <Drawer
         variant="permanent"
-        className={styles.drawer}
+        className="drawer"
         sx={{
           display: { xs: "none", sm: "block" },
         }}
@@ -115,7 +114,7 @@ const AdminLayout: React.FC = () => {
       >
         {drawer}
       </Drawer>
-      <main className={styles.mainContent}>
+      <main className="mainContent">
         <Toolbar />
         <Outlet /> {/* İçerik burada render edilecek */}
       </main>
