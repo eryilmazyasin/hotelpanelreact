@@ -1,26 +1,13 @@
-import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link, Outlet } from 'react-router-dom';
 
-import HomeIcon from "@mui/icons-material/Home";
-import LogoutIcon from "@mui/icons-material/Logout"; // Logout iconu ekleyin
-import MenuIcon from "@mui/icons-material/Menu";
-import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Divider,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import "./AdminLayout.scss";
+import HomeIcon from '@mui/icons-material/Home';
+import LogoutIcon from '@mui/icons-material/Logout'; // Logout iconu ekleyin
+import MenuIcon from '@mui/icons-material/Menu';
+import PersonIcon from '@mui/icons-material/Person';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
+import './AdminLayout.scss';
 
 const drawerWidth = 240;
 
@@ -32,10 +19,10 @@ const AdminLayout: React.FC = () => {
   };
 
   const drawer = (
-    <div>
+    <div className="drawer-wrapper">
       <Toolbar>
         <Typography variant="h6" noWrap>
-          Hotel Zeki Panel
+          Hotel Zeki
         </Typography>
       </Toolbar>
       <Divider />
@@ -86,7 +73,7 @@ const AdminLayout: React.FC = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Admin Panel
+            Hotel Zeki
           </Typography>
         </Toolbar>
       </AppBar>

@@ -1,7 +1,13 @@
 $drawer-width: 240px;
+$app-bar-background-color: #323232;
+$main-color: #323232;
 
 .container {
   display: flex;
+
+  & .MuiAppBar-root {
+    background-color: $app-bar-background-color;
+  }
 }
 
 .mainContent {
@@ -28,5 +34,14 @@ $drawer-width: 240px;
   .MuiDrawer-paper {
     box-sizing: border-box;
     width: $drawer-width;
+  }
+
+  & .MuiListItem-root {
+    & .MuiListItemIcon-root {
+      min-width: 40px;
+    }
+    & .MuiTypography-root {
+      color: $main-color;
+    }
   }
 }
