@@ -1,16 +1,32 @@
 import React from 'react';
 
+import AddIcon from '@mui/icons-material/Add';
 import BedroomParentIcon from '@mui/icons-material/BedroomParent';
 import CheckIcon from '@mui/icons-material/Check';
 import DoNotDisturbOnIcon from '@mui/icons-material/DoNotDisturbOn';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Fab from '@mui/material/Fab';
 import Grid from '@mui/material/Grid2';
 import './Homepage.scss';
 
 export default function ResponsiveGrid() {
   return (
     <Box sx={{ flexGrow: 1 }} className="homepage-wrapper">
+      <Fab color="success" aria-label="add" className="add-icon">
+        <AddIcon />
+      </Fab>
+
+      <div>
+        <b>Toplam Oda: </b> 102
+        <br />
+        <b>Dolu Oda: </b> 20
+        <br />
+        <b>Boş Oda: </b> 20
+        <br />
+        <hr />
+      </div>
+
       <Grid
         container
         spacing={{ xs: 2, md: 2 }}

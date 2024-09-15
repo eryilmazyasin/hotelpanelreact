@@ -32,14 +32,23 @@
   .MuiDrawer-paper {
     box-sizing: border-box;
     width: $drawer-width;
+    background-color: $app-bar-background-color;
+    color: #ffffff;
+
+    ul {
+      & .MuiListItemIcon-root {
+        color: #ffffff;
+      }
+
+      & .MuiTypography-root {
+        color: #ffffff;
+      }
+    }
   }
 
   & .MuiListItem-root {
     & .MuiListItemIcon-root {
       min-width: 40px;
-    }
-    & .MuiTypography-root {
-      color: $main-color;
     }
   }
 }
