@@ -1,21 +1,19 @@
 import React from 'react';
 
-import AddIcon from '@mui/icons-material/Add';
 import BedroomParentIcon from '@mui/icons-material/BedroomParent';
 import CheckIcon from '@mui/icons-material/Check';
 import DoNotDisturbOnIcon from '@mui/icons-material/DoNotDisturbOn';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Fab from '@mui/material/Fab';
 import Grid from '@mui/material/Grid2';
 import './Homepage.scss';
+
+import FabAdd from '../../components/FabAdd.tsx';
 
 export default function HomePage() {
   return (
     <Box sx={{ flexGrow: 1 }} className="homepage-wrapper">
-      <Fab color="success" aria-label="add" className="add-icon">
-        <AddIcon />
-      </Fab>
+      <FabAdd />
 
       <div>
         <b>Toplam Oda: </b> 102

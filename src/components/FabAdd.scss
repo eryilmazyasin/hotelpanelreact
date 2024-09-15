@@ -1,0 +1,16 @@
+@import "../styles/variables.scss";
+
+.add-icon.MuiFab-root {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  height: 80px;
+  width: 80px;
+  background-color: $main-color;
+  opacity: 0.6;
+
+  &:hover {
+    opacity: 1;
+    background-color: $main-color;
+  }
+}
