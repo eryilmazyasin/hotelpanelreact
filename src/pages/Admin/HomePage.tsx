@@ -2,10 +2,10 @@ import React from 'react';
 
 import BedroomParentIcon from '@mui/icons-material/BedroomParent';
 import CheckIcon from '@mui/icons-material/Check';
+import DoNotDisturbOnIcon from '@mui/icons-material/DoNotDisturbOn';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid2';
-import Paper from '@mui/material/Paper';
 import './Homepage.scss';
 
 export default function ResponsiveGrid() {
@@ -26,14 +26,22 @@ export default function ResponsiveGrid() {
               <div className="card-body">
                 <span>Deluxe Oda</span>
                 {/* //rezarvasyon yapılmış ise bu blok aktif olacak */}
-                {/* <div className="reservation-info">
-                  <span className="reservation-name">
+                <div className="reservation-info">
+                  {/* <span className="reservation-name">
                     <CheckIcon /> Yasin Eryılmaz
                   </span>
                   <span>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.{" "}
+                  </span> 
+
+                  <span>
+                    <br />
+                    <DoNotDisturbOnIcon />
+                    <br />
+                    Bu oda kullanım dışı.
                   </span>
-                </div> */}
+                  */}
+                </div>
               </div>
 
               {/* //rezarvasyon yapılmış ise bu blok aktif olacak */}
