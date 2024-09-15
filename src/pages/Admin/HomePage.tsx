@@ -10,7 +10,7 @@ import Fab from '@mui/material/Fab';
 import Grid from '@mui/material/Grid2';
 import './Homepage.scss';
 
-export default function ResponsiveGrid() {
+export default function HomePage() {
   return (
     <Box sx={{ flexGrow: 1 }} className="homepage-wrapper">
       <Fab color="success" aria-label="add" className="add-icon">

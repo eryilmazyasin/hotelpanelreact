@@ -35,20 +35,26 @@
     background-color: $app-bar-background-color;
     color: #ffffff;
 
-    ul {
-      & .MuiListItemIcon-root {
-        color: #ffffff;
-      }
-
-      & .MuiTypography-root {
-        color: #ffffff;
-      }
+    & .MuiDivider-root {
+      border-color: #4b4b4b;
     }
-  }
 
-  & .MuiListItem-root {
-    & .MuiListItemIcon-root {
-      min-width: 40px;
+    ul {
+      a {
+        color: #ffffff;
+        color: white;
+        text-decoration: none;
+        padding: 10px 15px;
+        display: block;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        &.active {
+          background-color: #ffffff;
+          color: $main-color;
+        }
+      }
     }
   }
 }

@@ -27,15 +27,15 @@ const App = () => {
           {/* Private Routes */}
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<AdminLayout />}>
-              <Route index element={<Navigate to="home" />} />
-              <Route path="home" element={<HomePage />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="profile" element={<Profile />} />
+              {/* Varsayılan sayfa olarak HomePage */}
+              <Route index element={<HomePage />} />
+              <Route path="customers" element={<Settings />} />
+              <Route path="notes" element={<Profile />} />
               <Route path="logout" element={<Logout />} />
             </Route>
           </Route>
 
-          {/* Eğer kullanıcı yanlış bir rotaya giderse yönlendirme */}
+          {/* Yanlış bir rotaya giderse yönlendirme */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </AuthProvider>

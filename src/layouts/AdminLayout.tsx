@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 
 import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout'; // Logout iconu ekleyin
 import MenuIcon from '@mui/icons-material/Menu';
+import NotesIcon from '@mui/icons-material/Notes';
 import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, Toolbar, Typography } from '@mui/material';
 import './AdminLayout.scss';
 
 const drawerWidth = 240;
@@ -27,33 +27,39 @@ const AdminLayout: React.FC = () => {
       </Toolbar>
       <Divider />
       <List>
-        <ListItem component={Link} to="home">
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Ana Sayfa" />
-        </ListItem>
-        <ListItem component={Link} to="settings">
-          <ListItemIcon>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText primary="Ayarlar" />
-        </ListItem>
-        <ListItem component={Link} to="profile">
-          <ListItemIcon>
-            <PersonIcon />
-          </ListItemIcon>
-          <ListItemText primary="Profil" />
-        </ListItem>
+        <NavLink
+          to="/"
+          className={({ isActive }) => (isActive ? "active" : "")}
+          onClick={handleDrawerToggle}
+        >
+          <HomeIcon /> {/* MUI Icon */}
+          Anasayfa
+        </NavLink>
+        <NavLink
+          to="/customers"
+          className={({ isActive }) => (isActive ? "active" : "")}
+          onClick={handleDrawerToggle}
+        >
+          <PersonIcon />
+          Müşteriler
+        </NavLink>
+        <NavLink
+          to="/notes"
+          className={({ isActive }) => (isActive ? "active" : "")}
+          onClick={handleDrawerToggle}
+        >
+          <NotesIcon />
+          Notlar
+        </NavLink>
         <Divider />
-        <ListItem component={Link} to="logout">
-          {" "}
-          {/* Logout route'u ekleyin */}
-          <ListItemIcon>
-            <LogoutIcon />
-          </ListItemIcon>
-          <ListItemText primary="Çıkış Yap" />
-        </ListItem>
+        <NavLink
+          to="/logout"
+          className={({ isActive }) => (isActive ? "active" : "")}
+          onClick={handleDrawerToggle}
+        >
+          <LogoutIcon />
+          Çıkış Yap
+        </NavLink>
       </List>
     </div>
   );
