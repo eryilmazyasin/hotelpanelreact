@@ -4,9 +4,19 @@ import AddIcon from '@mui/icons-material/Add';
 import { Fab } from '@mui/material';
 import './FabAdd.scss';
 
-export default function FabAdd() {
+interface IProps {
+  onClick: () => void;
+}
+
+export default function FabAdd({ onClick }: IProps) {
   return (
-    <Fab color="success" aria-label="add" className="add-icon">
+    <Fab
+      color="success"
+      aria-label="add"
+      className="add-icon"
+      aria-hidden={false}
+      onClick={onClick}
+    >
       <AddIcon />
     </Fab>
   );

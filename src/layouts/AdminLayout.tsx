@@ -9,6 +9,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, Toolbar, Typography } from '@mui/material';
 import './AdminLayout.scss';
 
+import AddRoomModal from '../modals/AddRoomModal';
+
 const drawerWidth = 240;
 
 const AdminLayout: React.FC = () => {

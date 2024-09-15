@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import BedroomParentIcon from '@mui/icons-material/BedroomParent';
 import CheckIcon from '@mui/icons-material/Check';
@@ -9,11 +9,22 @@ import Grid from '@mui/material/Grid2';
 import './Homepage.scss';
 
 import FabAdd from '../../components/FabAdd.tsx';
+import AddRoomModal from '../../modals/AddRoomModal.tsx';
 
 export default function HomePage() {
+  const [roomModalOpen, setRoomModalOpen] = useState(false);
+
+  const handleAddClick = () => {
+    setRoomModalOpen(true);
+  };
+
+  const handleRoomModalOpenState = (value: boolean) => {
+    setRoomModalOpen(value);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }} className="homepage-wrapper">
-      <FabAdd />
+      <FabAdd onClick={handleAddClick} />
 
       <div>
         <b>Toplam Oda: </b> 102
@@ -69,6 +80,11 @@ export default function HomePage() {
           </Grid>
         ))}
       </Grid>
+
+      <AddRoomModal
+        open={roomModalOpen}
+        onRoomModalOpenState={handleRoomModalOpenState}
+      />
     </Box>
   );
 }
