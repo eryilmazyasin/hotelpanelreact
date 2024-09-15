@@ -1,0 +1,69 @@
+@import "../../styles/variables.scss";
+
+.homepage-wrapper {
+  & .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border: 1px solid $border-color;
+    border-radius: 3px;
+    color: $main-color;
+
+    & .MuiButtonBase-root {
+      font-size: 11px;
+      width: 100%;
+      background: #2e6eb3;
+      text-transform: capitalize;
+    }
+
+    & .card-title {
+      display: flex;
+      gap: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+      padding: 10px;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    & .card-body {
+      height: 100px;
+      background: #f5f5f5;
+      width: 100%;
+      border-radius: 3px;
+      text-align: center;
+      font-size: 12px;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      margin-bottom: 10px;
+      flex-direction: column;
+
+      & .reservation-info {
+        & .reservation-name {
+          font-weight: 600;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 5px;
+
+          svg {
+            width: 15px;
+            color: darkgreen;
+          }
+        }
+      }
+    }
+
+    & .date {
+      background-color: #66bb6a;
+      color: white;
+      width: 90%;
+      border-radius: 3px;
+      font-size: 12px;
+      text-align: center;
+    }
+  }
+}
