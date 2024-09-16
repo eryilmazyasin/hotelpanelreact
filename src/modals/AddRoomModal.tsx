@@ -20,6 +20,8 @@ import { styled, useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+import useAddRoom from "../hooks/useAddRoom.ts";
+
 interface IProps {
   open: boolean;
   onRoomModalOpenState: (value: boolean) => void;
@@ -38,7 +40,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
   const [roomNumber, setRoomNumber] = useState("");
   const [roomType, setRoomType] = useState("");
   const [description, setDescription] = useState("");
-  const [nightlyRate, setNightlyRate] = useState("");
+  const [nightlyRate, setNightlyRate] = useState(0);
   const [availability, setAvailability] = useState(true);
 
   const [errors, setErrors] = useState({
@@ -48,9 +50,9 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
   });
 
   const [openDialog, setOpenDialog] = useState(false);
-  const theme = useTheme();
 
-  console.log({ open });
+  const theme = useTheme();
+  const { mutate: mutateAddRoom } = useAddRoom();
 
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -63,7 +65,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
     setRoomNumber("");
     setRoomType("");
     setDescription("");
-    setNightlyRate("");
+    setNightlyRate(0);
     setAvailability(true);
     setErrors({
       roomNumber: false,
@@ -79,7 +81,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
     let newErrors = {
       roomNumber: roomNumber === "",
       roomType: roomType === "",
-      nightlyRate: nightlyRate === "",
+      nightlyRate: nightlyRate === 0,
     };
 
     setErrors(newErrors);
@@ -88,14 +90,17 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
 
     if (isValid) {
       const formData = {
-        roomNumber,
-        roomType,
-        description,
-        nightlyRate,
-        availability,
+        room_number: roomNumber,
+        room_type: roomType,
+        description: description,
+        price_per_night: nightlyRate,
+        is_available: availability ? 1 : 0,
       };
+
       console.log("Form submitted successfully", formData);
-      // Burada formu işleme veya API'ye gönderme kodunu ekleyebilirsin
+
+      mutateAddRoom(formData);
+      handleClose();
     } else {
       console.log("Form validation failed");
     }
@@ -152,8 +157,8 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
                 onChange={(e) => setRoomType(e.target.value)}
                 label="Oda Tipi"
               >
-                <MenuItem value="Single">Standart</MenuItem>
-                <MenuItem value="Double">Deluxe</MenuItem>
+                <MenuItem value="standard">Standart</MenuItem>
+                <MenuItem value="deluxe">Deluxe</MenuItem>
               </Select>
               {errors.roomType && (
                 <p style={{ color: "red", fontSize: "12px" }}>
@@ -182,7 +187,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
               fullWidth
               type="number"
               value={nightlyRate}
-              onChange={(e) => setNightlyRate(e.target.value)}
+              onChange={(e) => setNightlyRate(Number(e.target.value))}
               error={errors.nightlyRate} // Hata durumu
               helperText={errors.nightlyRate && "Gecelik ücret boş bırakılamaz"} // Hata mesajı
             />
@@ -202,7 +207,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleAddRoom}>
-            Ekle
+            Kaydet
           </Button>
         </DialogActions>
       </BootstrapDialog>
