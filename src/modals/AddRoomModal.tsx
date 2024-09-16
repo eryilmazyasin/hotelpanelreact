@@ -40,7 +40,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
   const [roomNumber, setRoomNumber] = useState("");
   const [roomType, setRoomType] = useState("");
   const [description, setDescription] = useState("");
-  const [nightlyRate, setNightlyRate] = useState(0);
+  const [nightlyRate, setNightlyRate] = useState<any>(0);
   const [availability, setAvailability] = useState(true);
 
   const [errors, setErrors] = useState({
@@ -187,7 +187,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
               fullWidth
               type="number"
               value={nightlyRate}
-              onChange={(e) => setNightlyRate(Number(e.target.value))}
+              onChange={(e) => setNightlyRate(e.target.value)}
               error={errors.nightlyRate} // Hata durumu
               helperText={errors.nightlyRate && "Gecelik ücret boş bırakılamaz"} // Hata mesajı
             />
