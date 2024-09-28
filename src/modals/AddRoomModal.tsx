@@ -17,9 +17,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled, useTheme } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+// Helper fonksiyonları import ediyoruz
+import {
+  handleNightlyRateBlur,
+  handleNightlyRateChange,
+  handleNightlyRateFocus,
+} from "../helpers/currencyHelper.ts";
 import useAddRoom from "../hooks/useAddRoom.ts";
 
 interface IProps {
@@ -40,7 +45,8 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
   const [roomNumber, setRoomNumber] = useState("");
   const [roomType, setRoomType] = useState("");
   const [description, setDescription] = useState("");
-  const [nightlyRate, setNightlyRate] = useState<any>(0);
+  const [nightlyRate, setNightlyRate] = useState<any>("");
+  const [formattedNightlyRate, setFormattedNightlyRate] = useState<any>(""); // Formatlı değer için yeni bir state
   const [availability, setAvailability] = useState(true);
 
   const [errors, setErrors] = useState({
@@ -65,7 +71,8 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
     setRoomNumber("");
     setRoomType("");
     setDescription("");
-    setNightlyRate(0);
+    setNightlyRate("");
+    setFormattedNightlyRate("");
     setAvailability(true);
     setErrors({
       roomNumber: false,
@@ -81,7 +88,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
     let newErrors = {
       roomNumber: roomNumber === "",
       roomType: roomType === "",
-      nightlyRate: nightlyRate === 0,
+      nightlyRate: nightlyRate === "" || parseFloat(nightlyRate) === 0,
     };
 
     setErrors(newErrors);
@@ -93,7 +100,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
         room_number: roomNumber,
         room_type: roomType,
         description: description,
-        price_per_night: nightlyRate,
+        price_per_night: parseFloat(nightlyRate), // Ham değeri formda kullan
         is_available: availability ? 1 : 0,
       };
 
@@ -185,9 +192,21 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
               label="Gecelik Ücret"
               variant="outlined"
               fullWidth
-              type="number"
-              value={nightlyRate}
-              onChange={(e) => setNightlyRate(e.target.value)}
+              type="text" // Sayısal giriş ama formatlı gösterim
+              value={formattedNightlyRate} // Formatlı hali gösteriyoruz
+              onChange={(e) =>
+                handleNightlyRateChange(
+                  e,
+                  setNightlyRate,
+                  setFormattedNightlyRate
+                )
+              }
+              onBlur={() =>
+                handleNightlyRateBlur(nightlyRate, setFormattedNightlyRate)
+              } // Input dışına çıkıldığında formatla
+              onFocus={() =>
+                handleNightlyRateFocus(nightlyRate, setFormattedNightlyRate)
+              } // Input'a tıklayınca ham değeri göster
               error={errors.nightlyRate} // Hata durumu
               helperText={errors.nightlyRate && "Gecelik ücret boş bırakılamaz"} // Hata mesajı
             />

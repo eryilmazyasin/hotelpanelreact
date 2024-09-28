@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export interface IAddRoom {
+export interface IRoom {
   room_number: string;
   room_type: string;
   description: string;
@@ -8,8 +8,7 @@ export interface IAddRoom {
   is_available: number;
 }
 
-export const postAddRoom = async (params: IAddRoom) => {
+export const postAddRoom = async (params: IRoom) => {
   const response = await axios.post("/api/rooms", params);
-  console.log({ response });
   return response.data;
 };
