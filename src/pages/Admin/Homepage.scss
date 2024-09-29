@@ -11,10 +11,10 @@
     border: 1px solid $border-color;
     border-radius: 3px;
     color: $main-color;
-    cursor: pointer;
     min-height: 205px;
 
     &[data-room-is-available="false"] {
+      cursor: pointer;
       &:hover {
         & .card-body {
           filter: blur(5px);
