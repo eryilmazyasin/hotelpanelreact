@@ -75,12 +75,7 @@ export default function HomePage() {
                         <CheckIcon /> Yasin Eryılmaz
                       </span>
 
-                      {room.description && (
-                        <span>
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit.
-                        </span>
-                      )}
+                      {room.description && <span>{room.description}</span>}
 
                       {/* <span>
                         <br />
