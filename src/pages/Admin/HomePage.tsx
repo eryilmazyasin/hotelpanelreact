@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import BedroomParentIcon from "@mui/icons-material/BedroomParent";
 import CheckIcon from "@mui/icons-material/Check";
 import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
+import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -61,7 +62,7 @@ export default function HomePage() {
         {rooms?.length &&
           rooms.map((room, index) => (
             <Grid key={index} size={{ xs: 2, sm: 4, md: 3, lg: 2 }}>
-              <div className="card">
+              <div className="card" data-room-is-available={room.is_available}>
                 <div className="card-title">
                   <BedroomParentIcon />
                   <span>Oda - {room.room_number}</span>
@@ -98,6 +99,10 @@ export default function HomePage() {
                 {room.is_available && (
                   <Button variant="contained">Rezervasyon Yap</Button>
                 )}
+
+                <div className="edit-icon-wrapper">
+                  <EditIcon />
+                </div>
               </div>
             </Grid>
           ))}

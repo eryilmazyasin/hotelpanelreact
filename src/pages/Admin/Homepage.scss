@@ -2,6 +2,7 @@
 
 .homepage-wrapper {
   & .card {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -10,6 +11,32 @@
     border: 1px solid $border-color;
     border-radius: 3px;
     color: $main-color;
+    cursor: pointer;
+    min-height: 205px;
+
+    &[data-room-is-available="false"] {
+      &:hover {
+        & .card-body {
+          filter: blur(5px);
+        }
+
+        & .edit-icon-wrapper {
+          opacity: 1;
+        }
+      }
+    }
+
+    & .edit-icon-wrapper {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+
+      svg {
+        font-size: 32px;
+      }
+    }
 
     & .MuiButtonBase-root {
       font-size: 11px;
