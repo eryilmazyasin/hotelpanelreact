@@ -34,7 +34,18 @@ export default function HomePage() {
       </Box>
     );
 
-  if (!rooms && !isLoading) return "Oda yok";
+  if (!rooms && !isLoading) {
+    return (
+      <div className="homepage-empty-list">
+        <BedroomParentIcon className="bedroom-icon" />
+        <span className="text">Henüz oda yok</span>
+        <Button onClick={handleAddClick} variant="outlined">
+          Oda Ekle
+        </Button>
+        <FabAdd onClick={handleAddClick} />
+      </div>
+    );
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }} className="homepage-wrapper">

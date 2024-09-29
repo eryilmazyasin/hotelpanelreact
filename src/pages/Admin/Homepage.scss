@@ -94,3 +94,24 @@
     }
   }
 }
+
+.homepage-empty-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+
+  .bedroom-icon {
+    font-size: 3rem;
+    color: $main-color;
+  }
+
+  .text {
+    margin: 10px 0 15px 0;
+  }
+
+  & .MuiButton-root {
+    min-width: 170px;
+  }
+}
