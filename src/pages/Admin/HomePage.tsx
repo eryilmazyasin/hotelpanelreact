@@ -13,8 +13,7 @@ import "./Homepage.scss";
 import FabAdd from "../../components/FabAdd.tsx";
 import RoomItem from "../../components/RoomItem.tsx";
 import useRooms from "../../hooks/useRooms.ts";
-import AddRoomModal from "../../modals/AddRoomModal.tsx";
-import ReservationModal from "../../modals/ReservationModal.tsx";
+import AddUpdateRoomModal from "../../modals/AddUpdateRoomModal.tsx";
 
 export default function HomePage() {
   const [roomModalOpen, setRoomModalOpen] = useState(false);
@@ -80,10 +79,12 @@ export default function HomePage() {
           ))}
       </Grid>
 
-      <AddRoomModal
-        open={roomModalOpen}
-        onRoomModalOpenState={handleRoomModalOpenState}
-      />
+      {roomModalOpen && (
+        <AddUpdateRoomModal
+          open={roomModalOpen}
+          onRoomModalOpenState={handleRoomModalOpenState}
+        />
+      )}
     </Box>
   );
 }

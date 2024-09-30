@@ -18,7 +18,8 @@ export const handleNightlyRateChange = (
   setNightlyRate,
   setFormattedNightlyRate
 ) => {
-  const rawValue = e.target.value.replace(/[^\d.]/g, ""); // Sadece sayıları al
+  console.log({ e });
+  const rawValue = e?.target?.value?.replace(/[^\d.]/g, ""); // Sadece sayıları al
   setNightlyRate(rawValue);
   setFormattedNightlyRate(rawValue); // Input üzerinde formatlanmamış hali göster
 };

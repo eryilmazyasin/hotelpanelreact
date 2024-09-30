@@ -1,9 +1,10 @@
 export interface IRoom {
+  id: boolean;
   room_number: string;
   room_type: string;
   description: string;
   price_per_night: number;
-  is_available: number;
+  is_available: boolean;
   isReserved?: boolean;
   Reservation?: IReservation;
   Customer?: ICustomer;

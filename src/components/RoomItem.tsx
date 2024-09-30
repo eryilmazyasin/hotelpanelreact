@@ -9,7 +9,8 @@ import { Button } from "@mui/material";
 
 import { formatDateToTR } from "../helpers/helpers.ts";
 import { IRoom } from "../interfaces/interface.ts";
-import ReservationModal from "../modals/ReservationModal.tsx";
+import AddUpdateReservationModal from "../modals/AddUpdateReservationModal.tsx";
+import AddUpdateRoomModal from "../modals/AddUpdateRoomModal.tsx";
 
 interface IProps {
   room: IRoom;
@@ -18,27 +19,38 @@ interface IProps {
 export default function RoomItem(props: IProps) {
   const { room } = props;
   const [reservationModalOpen, setReservationModalOpen] = useState(false);
+  const [roomModalOpen, setRoomModalOpen] = useState(false);
 
   const handleReservationModalOpenState = (value: boolean) => {
     setReservationModalOpen(value);
+  };
+
+  const handleRoomModalOpenState = (value: boolean) => {
+    setRoomModalOpen(value);
   };
 
   return (
     <div>
       <div
         className="card"
-        data-room-is-available={room.is_available}
-        onClick={() =>
-          !room.is_available && handleReservationModalOpenState(true)
-        }
+        data-room-is-available={room.is_available && room.isReserved}
       >
-        <div className="card-title">
+        <div
+          className="card-title"
+          onClick={() => handleRoomModalOpenState(true)}
+        >
           <BedroomParentIcon />
           <span>Oda - {room.room_number}</span>
         </div>
-        <div className="card-body">
+        <div
+          className="card-body"
+          onClick={() =>
+            room.is_available &&
+            room.isReserved &&
+            handleReservationModalOpenState(true)
+          }
+        >
           <span>{room.room_type}</span>
-          {/* //rezarvasyon yapılmış ise bu blok aktif olacak */}
           {room.isReserved && room.is_available && room.Customer && (
             <div className="reservation-info">
               <span className="reservation-name">
@@ -57,10 +69,13 @@ export default function RoomItem(props: IProps) {
               Bu oda kullanım dışı.
             </span>
           )}
+
+          <div className="edit-icon-wrapper">
+            <EditIcon />
+          </div>
         </div>
 
         {room.is_available && room.isReserved && room.Reservation && (
-          //buralar veritabanından çekilecek
           <div className="date">
             <span>{formatDateToTR(room.Reservation.check_in_date)}</span>
             <br />
@@ -68,25 +83,31 @@ export default function RoomItem(props: IProps) {
           </div>
         )}
 
-        {room.is_available && !room.isReserved && (
+        {!room.isReserved && (
           <Button
             variant="contained"
+            disabled={!room.is_available}
             onClick={() => handleReservationModalOpenState(true)}
           >
             Rezervasyon Yap
           </Button>
         )}
-
-        <div className="edit-icon-wrapper">
-          <EditIcon />
-        </div>
       </div>
 
-      <ReservationModal
-        open={reservationModalOpen}
-        room={room}
-        onReservationModalOpenState={handleReservationModalOpenState}
-      />
+      {reservationModalOpen && (
+        <AddUpdateReservationModal
+          open={reservationModalOpen}
+          room={room}
+          onReservationModalOpenState={handleReservationModalOpenState}
+        />
+      )}
+      {roomModalOpen && (
+        <AddUpdateRoomModal
+          open={roomModalOpen}
+          onRoomModalOpenState={handleRoomModalOpenState}
+          room={room}
+        />
+      )}
     </div>
   );
 }
