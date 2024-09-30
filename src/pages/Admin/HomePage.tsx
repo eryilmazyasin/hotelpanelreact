@@ -11,8 +11,10 @@ import Grid from "@mui/material/Grid2";
 import "./Homepage.scss";
 
 import FabAdd from "../../components/FabAdd.tsx";
+import RoomItem from "../../components/RoomItem.tsx";
 import useRooms from "../../hooks/useRooms.ts";
 import AddRoomModal from "../../modals/AddRoomModal.tsx";
+import ReservationModal from "../../modals/ReservationModal.tsx";
 
 export default function HomePage() {
   const [roomModalOpen, setRoomModalOpen] = useState(false);
@@ -73,48 +75,7 @@ export default function HomePage() {
         {rooms?.length &&
           rooms.map((room, index) => (
             <Grid key={index} size={{ xs: 2, sm: 4, md: 3, lg: 2 }}>
-              <div className="card" data-room-is-available={room.is_available}>
-                <div className="card-title">
-                  <BedroomParentIcon />
-                  <span>Oda - {room.room_number}</span>
-                </div>
-                <div className="card-body">
-                  <span>{room.room_type}</span>
-                  {/* //rezarvasyon yapılmış ise bu blok aktif olacak */}
-                  {!room.is_available && (
-                    <div className="reservation-info">
-                      <span className="reservation-name">
-                        <CheckIcon /> Yasin Eryılmaz
-                      </span>
-
-                      {room.description && <span>{room.description}</span>}
-
-                      {/* <span>
-                        <br />
-                        <DoNotDisturbOnIcon />
-                        <br />
-                        Bu oda kullanım dışı.
-                      </span> */}
-                    </div>
-                  )}
-                </div>
-
-                {!room.is_available && (
-                  <div className="date">
-                    <span>15.09.2021</span>
-                    <br />
-                    <span>20.09.2021</span>
-                  </div>
-                )}
-
-                {room.is_available && (
-                  <Button variant="contained">Rezervasyon Yap</Button>
-                )}
-
-                <div className="edit-icon-wrapper">
-                  <EditIcon />
-                </div>
-              </div>
+              <RoomItem room={room} />
             </Grid>
           ))}
       </Grid>

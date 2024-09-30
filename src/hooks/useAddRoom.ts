@@ -5,7 +5,8 @@ import {
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
-import { IRoom, postAddRoom } from "../api/postAddRoom.ts";
+import { postAddRoom } from "../api/postAddRoom.ts";
+import { IRoom } from "../interfaces/interface.ts";
 
 const useAddRoom = (): UseMutationResult<IRoom, AxiosError, IRoom> => {
   const queryClient = useQueryClient();

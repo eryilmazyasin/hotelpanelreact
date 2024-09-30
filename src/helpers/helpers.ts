@@ -37,3 +37,19 @@ export const handleNightlyRateFocus = (
 ) => {
   setFormattedNightlyRate(nightlyRate); // Ham değeri geri koy
 };
+
+// dateHelper.js
+
+/**
+ * Tarihi Türk formatında (dd.MM.yyyy) formatlar.
+ * @param {string|Date} date - Formatlanacak tarih (Date objesi veya string).
+ * @returns {string} - Formatlanmış tarih (dd.MM.yyyy).
+ */
+export const formatDateToTR = (date) => {
+  const formattedDate = new Date(date).toLocaleDateString("tr-TR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  return formattedDate;
+};

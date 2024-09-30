@@ -26,10 +26,12 @@ import {
   handleNightlyRateFocus,
 } from "../helpers/helpers.ts";
 import useAddRoom from "../hooks/useAddRoom.ts";
+import { IRoom } from "../interfaces/interface.ts";
 
 interface IProps {
   open: boolean;
-  onRoomModalOpenState: (value: boolean) => void;
+  room: IRoom;
+  onReservationModalOpenState: (value: boolean) => void;
 }
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -41,7 +43,11 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
+export default function ReservationModal({
+  open,
+  room,
+  onReservationModalOpenState,
+}: IProps) {
   const [roomNumber, setRoomNumber] = useState("");
   const [roomType, setRoomType] = useState("");
   const [description, setDescription] = useState("");
@@ -67,50 +73,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
   }, [open]);
 
   const handleClose = () => {
-    onRoomModalOpenState?.(false);
-    setRoomNumber("");
-    setRoomType("");
-    setDescription("");
-    setNightlyRate("");
-    setFormattedNightlyRate("");
-    setAvailability(true);
-    setErrors({
-      roomNumber: false,
-      roomType: false,
-      nightlyRate: false,
-    });
-  };
-
-  const handleAddRoom = (event) => {
-    event.preventDefault();
-
-    // Hata kontrolü
-    let newErrors = {
-      roomNumber: roomNumber === "",
-      roomType: roomType === "",
-      nightlyRate: nightlyRate === "" || parseFloat(nightlyRate) === 0,
-    };
-
-    setErrors(newErrors);
-
-    const isValid = !Object.values(newErrors).includes(true);
-
-    if (isValid) {
-      const formData = {
-        room_number: roomNumber,
-        room_type: roomType,
-        description: description,
-        price_per_night: parseFloat(nightlyRate), // Ham değeri formda kullan
-        is_available: availability ? 1 : 0,
-      };
-
-      console.log("Form submitted successfully", formData);
-
-      mutateAddRoom(formData);
-      handleClose();
-    } else {
-      console.log("Form validation failed");
-    }
+    onReservationModalOpenState?.(false);
   };
 
   return (
@@ -128,7 +91,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
         disableEscapeKeyDown
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Oda Ekle
+          Oda {room.room_number} - Rezervasyon
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -225,7 +188,7 @@ export default function AddRoomModal({ open, onRoomModalOpenState }: IProps) {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAddRoom}>Kaydet</Button>
+          <Button>Kaydet</Button>
         </DialogActions>
       </BootstrapDialog>
     </React.Fragment>
