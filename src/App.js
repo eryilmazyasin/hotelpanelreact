@@ -14,6 +14,7 @@ import PrivateRoute from "./routes/PrivateRoute.tsx";
 import Login from "./pages/Auth/Login.tsx";
 import Logout from "./pages/Auth/Logout.tsx";
 import { AuthProvider } from "./context/authContext.tsx";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </AuthProvider>
+      <Toaster />
     </Router>
   );
 };

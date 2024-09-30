@@ -25,6 +25,7 @@ import {
   handleNightlyRateFocus,
 } from "../helpers/helpers.ts";
 import useAddRoom from "../hooks/useAddRoom.ts";
+import useDeleteRoom from "../hooks/useDeleteRoom.ts";
 import useUpdateRoom from "../hooks/useUpdateRoom.ts";
 import { IRoom } from "../interfaces/interface.ts";
 
@@ -63,6 +64,7 @@ const AddUpdateRoomModal = React.memo(
     const theme = useTheme();
     const { mutate: mutateAddRoom } = useAddRoom();
     const { mutate: mutateUpdateRoom } = useUpdateRoom();
+    const { mutate: mutateDeleteRoom } = useDeleteRoom();
 
     const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -137,6 +139,18 @@ const AddUpdateRoomModal = React.memo(
         handleClose();
       } else {
         console.log("Form validation failed");
+      }
+    };
+
+    const handleDeleteRoom = (event) => {
+      event.preventDefault();
+
+      const isConfirmed = window.confirm(
+        "Bu odayı silmek istediğinize emin misiniz?"
+      );
+      if (isConfirmed) {
+        mutateDeleteRoom(room?.id);
+        handleClose();
       }
     };
 
@@ -254,6 +268,12 @@ const AddUpdateRoomModal = React.memo(
             </div>
           </DialogContent>
           <DialogActions>
+            {room && (
+              <Button onClick={handleDeleteRoom} color="error">
+                Odayı Sil
+              </Button>
+            )}
+
             <Button onClick={handleAddUpdateRoom}>
               {room ? "Güncelle" : "Kaydet"}
             </Button>

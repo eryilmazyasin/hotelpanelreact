@@ -4,6 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { toast } from "react-hot-toast";
 
 import { postAddRoom } from "../api/postAddRoom.ts";
 import { IRoom } from "../interfaces/interface.ts";
@@ -19,6 +20,8 @@ const useAddRoom = (): UseMutationResult<IRoom, AxiosError, IRoom> => {
         // Eğer mevcut 'rooms' yoksa yeni bir liste başlat, varsa yeni odayı ekle
         return oldRooms ? [...oldRooms, newRoom] : [newRoom];
       });
+
+      toast.success("Oda başarıyla eklendi!");
     },
   });
 };

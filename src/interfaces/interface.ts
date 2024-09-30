@@ -1,5 +1,5 @@
 export interface IRoom {
-  id: boolean;
+  id?: number;
   room_number: string;
   room_type: string;
   description: string;
