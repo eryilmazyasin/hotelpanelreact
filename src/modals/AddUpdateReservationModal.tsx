@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 import CloseIcon from "@mui/icons-material/Close";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -11,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+import { Dayjs } from "dayjs";
 import ReservationDatePicker from "../components/ReservationDatePicker.tsx";
 // Helper fonksiyonları import ediyoruz
 import {
@@ -18,6 +21,8 @@ import {
   handleNightlyRateChange,
   handleNightlyRateFocus,
 } from "../helpers/helpers.ts";
+import useAddCustomer from "../hooks/useAddCustomer.ts";
+import useAddReservation from "../hooks/useAddReservation.ts";
 import useAddRoom from "../hooks/useAddRoom.ts";
 import { IRoom } from "../interfaces/interface.ts";
 
@@ -47,16 +52,21 @@ export default function AddUpdateReservationModal({
   const [customerId, setCustomerId] = useState<any>("");
   const [formattedNightlyRate, setFormattedNightlyRate] = useState<any>(""); // Formatlı değer için yeni bir state
   const [guestNumber, setGuestNumber] = useState(1);
+  const [checkInDate, setCheckInDate] = useState<Dayjs | null>(null);
+  const [checkOutDate, setCheckOutDate] = useState<Dayjs | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
   const [errors, setErrors] = useState({
     customerName: false,
     customerPhone: false,
-    customerId: false,
+    checkInDate: false, // Giriş tarihi için hata yönetimi
+    checkOutDate: false, // Çıkış tarihi için hata yönetimi
   });
 
   const theme = useTheme();
-  const { mutate: mutateAddRoom } = useAddRoom();
+  const queryClient = useQueryClient();
+  const { mutate: mutateAddCustomer } = useAddCustomer();
+  const { mutate: mutateAddReservation } = useAddReservation();
 
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -72,6 +82,87 @@ export default function AddUpdateReservationModal({
 
   const handleClose = () => {
     onReservationModalOpenState?.(false);
+  };
+
+  const handleSave = (event) => {
+    event.preventDefault(); // Formun varsayılan submit işlemini engelle
+
+    // Hata kontrolü
+    let newErrors = {
+      customerName: customerName === "",
+      customerPhone: customerPhone === "",
+      checkInDate: checkInDate === null, // Giriş tarihi boş mu?
+      checkOutDate: checkOutDate === null, // Çıkış tarihi boş mu?
+    };
+
+    setErrors(newErrors);
+
+    const isValid = !Object.values(newErrors).includes(true);
+
+    if (isValid) {
+      const customerData = {
+        first_name: customerName,
+        last_name: "",
+        phone_number: customerPhone,
+        national_id: customerId,
+        room_id: room.id,
+      };
+
+      mutateAddCustomer(customerData, {
+        onSuccess: (customerResponse) => {
+          const rooms = queryClient.getQueryData<IRoom[]>(["rooms"]);
+
+          console.log({ customerResponse });
+
+          if (rooms) {
+            const updatedRooms = rooms.map((room) => {
+              if (room.id === room.id) {
+                return {
+                  ...room,
+                  Customer: customerResponse,
+                };
+              }
+              return room;
+            });
+
+            queryClient.setQueryData(["rooms"], updatedRooms);
+          }
+
+          // Müşteri başarılı şekilde kaydedildi, şimdi rezervasyonu kaydedelim
+          const nights = checkOutDate && checkOutDate.diff(checkInDate, "day"); // Gün farkını hesapla
+
+          const reservationData = {
+            room_id: room.id,
+            customer_id: customerResponse.id,
+            check_in_date: checkInDate?.format("YYYY-MM-DD"),
+            check_out_date: checkOutDate?.format("YYYY-MM-DD"),
+            num_of_guests: guestNumber,
+            total_price: nights ? parseFloat(nightlyRate) * nights : 0,
+            price_per_night: parseFloat(nightlyRate),
+          };
+
+          // Rezervasyonu kaydet
+          mutateAddReservation(reservationData, {
+            onSuccess: () => {
+              console.log("Rezervasyon başarıyla kaydedildi.", reservationData);
+              handleClose(); // İşlem tamamlandığında modalı kapat
+            },
+            onError: (error) => {
+              console.error(
+                "Rezervasyon kaydedilemedi:",
+                error,
+                reservationData
+              );
+            },
+          });
+        },
+        onError: (error) => {
+          console.error("Müşteri kaydedilemedi:", error);
+        },
+      });
+    } else {
+      console.log("Form doğrulama hatası");
+    }
   };
 
   return (
@@ -178,11 +269,17 @@ export default function AddUpdateReservationModal({
           </div>
 
           <div>
-            <ReservationDatePicker />
+            <ReservationDatePicker
+              checkInDate={checkInDate}
+              checkOutDate={checkOutDate}
+              setCheckInDate={setCheckInDate}
+              setCheckOutDate={setCheckOutDate}
+              errors={errors} // Hata durumlarını prop olarak gönderiyoruz
+            />
           </div>
         </DialogContent>
         <DialogActions>
-          <Button>Kaydet</Button>
+          <Button onClick={handleSave}>Kaydet</Button>
         </DialogActions>
       </BootstrapDialog>
     </React.Fragment>
