@@ -3,7 +3,7 @@ export interface IRoom {
   room_number: string;
   room_type: string;
   description: string;
-  price_per_night: number;
+  price_per_night: string;
   is_available: boolean;
   isReserved?: boolean;
   Reservation?: IReservation;

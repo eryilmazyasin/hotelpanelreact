@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -19,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+import ReservationDatePicker from "../components/ReservationDatePicker.tsx";
 // Helper fonksiyonları import ediyoruz
 import {
   handleNightlyRateBlur,
@@ -48,20 +41,19 @@ export default function AddUpdateReservationModal({
   room,
   onReservationModalOpenState,
 }: IProps) {
-  const [roomNumber, setRoomNumber] = useState("");
-  const [roomType, setRoomType] = useState("");
-  const [description, setDescription] = useState("");
-  const [nightlyRate, setNightlyRate] = useState<any>("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [nightlyRate, setNightlyRate] = useState("");
+  const [customerId, setCustomerId] = useState<any>("");
   const [formattedNightlyRate, setFormattedNightlyRate] = useState<any>(""); // Formatlı değer için yeni bir state
-  const [availability, setAvailability] = useState(true);
+  const [guestNumber, setGuestNumber] = useState(1);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const [errors, setErrors] = useState({
-    roomNumber: false,
-    roomType: false,
-    nightlyRate: false,
+    customerName: false,
+    customerPhone: false,
+    customerId: false,
   });
-
-  const [openDialog, setOpenDialog] = useState(false);
 
   const theme = useTheme();
   const { mutate: mutateAddRoom } = useAddRoom();
@@ -71,6 +63,12 @@ export default function AddUpdateReservationModal({
   useEffect(() => {
     setOpenDialog(open);
   }, [open]);
+
+  useEffect(() => {
+    const roomPrice = room && room.price_per_night;
+    setNightlyRate(roomPrice);
+    handleNightlyRateBlur(roomPrice, setFormattedNightlyRate);
+  }, [room]);
 
   const handleClose = () => {
     onReservationModalOpenState?.(false);
@@ -108,45 +106,51 @@ export default function AddUpdateReservationModal({
         <DialogContent dividers>
           <div style={{ marginBottom: "1rem" }}>
             <TextField
-              label="Oda Numarası"
+              label="Ad Soyad"
               variant="outlined"
               fullWidth
-              value={roomNumber}
-              onChange={(e) => setRoomNumber(e.target.value)}
-              error={errors.roomNumber} // Hata durumu
-              helperText={errors.roomNumber && "Oda numarası boş bırakılamaz"} // Hata mesajı
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              error={errors.customerName}
+              helperText={
+                errors.customerName && "Müşteri bilgileri boş bırakılamaz."
+              }
             />
           </div>
 
           <div style={{ marginBottom: "1rem" }}>
-            <FormControl fullWidth error={errors.roomType}>
-              <InputLabel id="room-type-label">Oda Tipi</InputLabel>
-              <Select
-                labelId="room-type-label"
-                value={roomType}
-                onChange={(e) => setRoomType(e.target.value)}
-                label="Oda Tipi"
-              >
-                <MenuItem value="standard">Standart</MenuItem>
-                <MenuItem value="deluxe">Deluxe</MenuItem>
-              </Select>
-              {errors.roomType && (
-                <p style={{ color: "red", fontSize: "12px" }}>
-                  Oda tipi boş bırakılamaz
-                </p>
-              )}
-            </FormControl>
+            <TextField
+              label="Telefon Numarası"
+              variant="outlined"
+              fullWidth
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+              error={errors.customerPhone}
+              type="number"
+              helperText={
+                errors.customerPhone && "Telefon numarası boş bırakılamaz."
+              }
+            />
           </div>
 
           <div style={{ marginBottom: "1rem" }}>
             <TextField
-              label="Açıklama"
+              label="TC Kimlik Numarası"
               variant="outlined"
               fullWidth
-              multiline
-              rows={4}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={customerId}
+              onChange={(e) => setCustomerId(e.target.value)}
+            />
+          </div>
+
+          <div style={{ marginBottom: "1rem" }}>
+            <TextField
+              label="Misafir Sayısı"
+              variant="outlined"
+              fullWidth
+              type="number"
+              value={guestNumber}
+              onChange={(e) => setGuestNumber(Number(e.target.value))}
             />
           </div>
 
@@ -155,8 +159,8 @@ export default function AddUpdateReservationModal({
               label="Gecelik Ücret"
               variant="outlined"
               fullWidth
-              type="text" // Sayısal giriş ama formatlı gösterim
-              value={formattedNightlyRate} // Formatlı hali gösteriyoruz
+              type="text"
+              value={formattedNightlyRate}
               onChange={(e) =>
                 handleNightlyRateChange(
                   e,
@@ -166,25 +170,15 @@ export default function AddUpdateReservationModal({
               }
               onBlur={() =>
                 handleNightlyRateBlur(nightlyRate, setFormattedNightlyRate)
-              } // Input dışına çıkıldığında formatla
+              }
               onFocus={() =>
                 handleNightlyRateFocus(nightlyRate, setFormattedNightlyRate)
-              } // Input'a tıklayınca ham değeri göster
-              error={errors.nightlyRate} // Hata durumu
-              helperText={errors.nightlyRate && "Gecelik ücret boş bırakılamaz"} // Hata mesajı
+              }
             />
           </div>
 
-          <div style={{ marginBottom: "1rem" }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={availability}
-                  onChange={(e) => setAvailability(e.target.checked)}
-                />
-              }
-              label="Müsait"
-            />
+          <div>
+            <ReservationDatePicker />
           </div>
         </DialogContent>
         <DialogActions>
