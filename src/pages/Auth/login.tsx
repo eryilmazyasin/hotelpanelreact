@@ -25,6 +25,11 @@ const Login = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    if (!username || !password) {
+      setError("Eksik bilgi girdiniz.");
+      return;
+    }
+
     mutateLogin(
       { name: username, password },
       {

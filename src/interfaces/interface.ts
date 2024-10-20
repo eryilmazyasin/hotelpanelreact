@@ -7,12 +7,11 @@ export interface IRoom {
   is_available: boolean;
   isReserved?: boolean;
   Reservation?: IReservation;
-  Customer?: ICustomer;
+  Customers?: ICustomers[];
 }
 
-export interface ICustomer {
+export interface ICustomers {
   first_name: string;
-  last_name?: string;
   phone_number: string;
   national_id: string;
   id?: number;
@@ -20,11 +19,17 @@ export interface ICustomer {
 }
 
 export interface IReservation {
-  room_id: number | undefined; // Oda ID'si, undefined olabilir
-  customer_id: number | undefined; // Müşteri ID'si, undefined olabilir
-  check_in_date: string | undefined; // Giriş tarihi, undefined olabilir
-  check_out_date: string | undefined; // Çıkış tarihi, undefined olabilir
-  num_of_guests: number;
-  total_price: number;
-  price_per_night: number;
+  id?: number; // Güncellemede kullanılacak
+  room_id?: number | null;
+  check_in_date?: string | null;
+  check_out_date?: string | null;
+  num_of_guests?: number;
+  total_price?: number;
+  price_per_night?: number;
+  customersData?: {
+    first_name: string;
+    last_name?: string;
+    phone_number: string;
+    national_id: string;
+  }[];
 }

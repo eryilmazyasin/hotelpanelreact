@@ -13,22 +13,20 @@ import IconButton from "@mui/material/IconButton";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import ReservationDatePicker from "../components/ReservationDatePicker.tsx";
-// Helper fonksiyonları import ediyoruz
 import {
   handleNightlyRateBlur,
   handleNightlyRateChange,
   handleNightlyRateFocus,
 } from "../helpers/helpers.ts";
-import useAddCustomer from "../hooks/useAddCustomer.ts";
 import useAddReservation from "../hooks/useAddReservation.ts";
-import useAddRoom from "../hooks/useAddRoom.ts";
+import useUpdateReservation from "../hooks/useUpdateReservation.ts"; // useUpdateReservation hook'unu import ettik
 import { IRoom } from "../interfaces/interface.ts";
 
 interface IProps {
   open: boolean;
-  room: IRoom;
+  room: IRoom | null;
   onReservationModalOpenState: (value: boolean) => void;
 }
 
@@ -46,12 +44,11 @@ export default function AddUpdateReservationModal({
   room,
   onReservationModalOpenState,
 }: IProps) {
-  const [customerPhone, setCustomerPhone] = useState("");
-  const [customerName, setCustomerName] = useState("");
+  const [guests, setGuests] = useState([
+    { id: null, name: "", phone: "", nationalId: "" },
+  ]);
   const [nightlyRate, setNightlyRate] = useState("");
-  const [customerId, setCustomerId] = useState<any>("");
-  const [formattedNightlyRate, setFormattedNightlyRate] = useState<any>(""); // Formatlı değer için yeni bir state
-  const [guestNumber, setGuestNumber] = useState(1);
+  const [formattedNightlyRate, setFormattedNightlyRate] = useState<any>("");
   const [checkInDate, setCheckInDate] = useState<Dayjs | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Dayjs | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -59,14 +56,14 @@ export default function AddUpdateReservationModal({
   const [errors, setErrors] = useState({
     customerName: false,
     customerPhone: false,
-    checkInDate: false, // Giriş tarihi için hata yönetimi
-    checkOutDate: false, // Çıkış tarihi için hata yönetimi
+    checkInDate: false,
+    checkOutDate: false,
   });
 
   const theme = useTheme();
   const queryClient = useQueryClient();
-  const { mutate: mutateAddCustomer } = useAddCustomer();
   const { mutate: mutateAddReservation } = useAddReservation();
+  const { mutate: mutateUpdateReservation } = useUpdateReservation(); // Rezervasyon güncelleme hook'u kullanıldı
 
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -75,9 +72,31 @@ export default function AddUpdateReservationModal({
   }, [open]);
 
   useEffect(() => {
-    const roomPrice = room && room.price_per_night;
-    setNightlyRate(roomPrice);
-    handleNightlyRateBlur(roomPrice, setFormattedNightlyRate);
+    if (room) {
+      const roomPrice = room.price_per_night;
+      setNightlyRate(roomPrice);
+      handleNightlyRateBlur(roomPrice, setFormattedNightlyRate);
+
+      if (room.Reservation) {
+        setCheckInDate(dayjs(room.Reservation.check_in_date));
+        setCheckOutDate(dayjs(room.Reservation.check_out_date));
+
+        const customers = room.Customers || [];
+        console.log({ customers });
+        const guestList = customers.map((customer: any) => ({
+          id: customer.id, // ID'yi burada ekliyoruz
+          name: customer.first_name,
+          phone: customer.phone_number,
+          nationalId: customer.national_id,
+        }));
+        setGuests(guestList);
+      }
+    } else {
+      setGuests([{ id: null, name: "", phone: "", nationalId: "" }]);
+      setNightlyRate("");
+      setCheckInDate(null);
+      setCheckOutDate(null);
+    }
   }, [room]);
 
   const handleClose = () => {
@@ -85,14 +104,13 @@ export default function AddUpdateReservationModal({
   };
 
   const handleSave = (event) => {
-    event.preventDefault(); // Formun varsayılan submit işlemini engelle
+    event.preventDefault();
 
-    // Hata kontrolü
     let newErrors = {
-      customerName: customerName === "",
-      customerPhone: customerPhone === "",
-      checkInDate: checkInDate === null, // Giriş tarihi boş mu?
-      checkOutDate: checkOutDate === null, // Çıkış tarihi boş mu?
+      customerName: guests[0].name === "",
+      customerPhone: guests[0].phone === "",
+      checkInDate: checkInDate === null,
+      checkOutDate: checkOutDate === null,
     };
 
     setErrors(newErrors);
@@ -100,69 +118,82 @@ export default function AddUpdateReservationModal({
     const isValid = !Object.values(newErrors).includes(true);
 
     if (isValid) {
-      const customerData = {
-        first_name: customerName,
-        last_name: "",
-        phone_number: customerPhone,
-        national_id: customerId,
-        room_id: room.id,
+      const customerData = guests.map((guest) => ({
+        ...(guest.id ? { id: guest.id } : {}), // Yalnızca id varsa ekleyin
+        first_name: guest.name,
+        phone_number: guest.phone,
+        national_id: guest.nationalId,
+      }));
+
+      const reservationData = {
+        room_id: room?.id || null,
+        check_in_date: checkInDate ? checkInDate.format("YYYY-MM-DD") : null,
+        check_out_date: checkOutDate ? checkOutDate.format("YYYY-MM-DD") : null,
+        num_of_guests: guests.length,
+        total_price: nightlyRate ? parseFloat(nightlyRate) * guests.length : 0,
+        price_per_night: parseFloat(nightlyRate),
       };
 
-      mutateAddCustomer(customerData, {
-        onSuccess: (customerResponse) => {
-          const rooms = queryClient.getQueryData<IRoom[]>(["rooms"]);
+      if (
+        !reservationData.room_id ||
+        !reservationData.check_in_date ||
+        !reservationData.check_out_date
+      ) {
+        console.error("Eksik rezervasyon bilgileri:", reservationData);
+        return;
+      }
 
-          console.log({ customerResponse });
+      if (room?.Reservation?.id) {
+        const payload = {
+          id: room.Reservation.id,
+          reservationData,
+          customersData: customerData,
+        };
 
-          if (rooms) {
-            const updatedRooms = rooms.map((room) => {
-              if (room.id === room.id) {
-                return {
-                  ...room,
-                  Customer: customerResponse,
-                };
-              }
-              return room;
-            });
+        console.log({ payload });
 
-            queryClient.setQueryData(["rooms"], updatedRooms);
-          }
+        mutateUpdateReservation(payload, {
+          onSuccess: () => {
+            console.log("Rezervasyon başarıyla güncellendi.");
+            queryClient.invalidateQueries("reservations"); // Tek bir sorgu için kullanılır
 
-          // Müşteri başarılı şekilde kaydedildi, şimdi rezervasyonu kaydedelim
-          const nights = checkOutDate && checkOutDate.diff(checkInDate, "day"); // Gün farkını hesapla
+            handleClose();
+          },
+          onError: (error) => {
+            console.error("Rezervasyon güncellenemedi:", error);
+          },
+        });
+      } else {
+        const payload = {
+          reservationData,
+          customersData: customerData,
+        };
 
-          const reservationData = {
-            room_id: room.id,
-            customer_id: customerResponse.id,
-            check_in_date: checkInDate?.format("YYYY-MM-DD"),
-            check_out_date: checkOutDate?.format("YYYY-MM-DD"),
-            num_of_guests: guestNumber,
-            total_price: nights ? parseFloat(nightlyRate) * nights : 0,
-            price_per_night: parseFloat(nightlyRate),
-          };
+        mutateAddReservation(payload, {
+          onSuccess: () => {
+            console.log("Rezervasyon başarıyla kaydedildi.");
+            queryClient.invalidateQueries("reservations"); // Tek bir sorgu için kullanılır
 
-          // Rezervasyonu kaydet
-          mutateAddReservation(reservationData, {
-            onSuccess: () => {
-              console.log("Rezervasyon başarıyla kaydedildi.", reservationData);
-              handleClose(); // İşlem tamamlandığında modalı kapat
-            },
-            onError: (error) => {
-              console.error(
-                "Rezervasyon kaydedilemedi:",
-                error,
-                reservationData
-              );
-            },
-          });
-        },
-        onError: (error) => {
-          console.error("Müşteri kaydedilemedi:", error);
-        },
-      });
+            handleClose();
+          },
+          onError: (error) => {
+            console.error("Rezervasyon kaydedilemedi:", error);
+          },
+        });
+      }
     } else {
       console.log("Form doğrulama hatası");
     }
+  };
+
+  const handleAddGuest = () => {
+    setGuests([...guests, { id: null, name: "", phone: "", nationalId: "" }]);
+  };
+
+  const handleGuestChange = (index, field, value) => {
+    const updatedGuests = [...guests];
+    updatedGuests[index][field] = value;
+    setGuests(updatedGuests);
   };
 
   return (
@@ -180,7 +211,7 @@ export default function AddUpdateReservationModal({
         disableEscapeKeyDown
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          Oda {room.room_number} - Rezervasyon
+          Oda {room?.room_number || ""} - Rezervasyon
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -195,55 +226,63 @@ export default function AddUpdateReservationModal({
           <CloseIcon />
         </IconButton>
         <DialogContent dividers>
-          <div style={{ marginBottom: "1rem" }}>
-            <TextField
-              label="Ad Soyad"
-              variant="outlined"
-              fullWidth
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-              error={errors.customerName}
-              helperText={
-                errors.customerName && "Müşteri bilgileri boş bırakılamaz."
-              }
-            />
-          </div>
-
-          <div style={{ marginBottom: "1rem" }}>
-            <TextField
-              label="Telefon Numarası"
-              variant="outlined"
-              fullWidth
-              value={customerPhone}
-              onChange={(e) => setCustomerPhone(e.target.value)}
-              error={errors.customerPhone}
-              type="number"
-              helperText={
-                errors.customerPhone && "Telefon numarası boş bırakılamaz."
-              }
-            />
-          </div>
-
-          <div style={{ marginBottom: "1rem" }}>
-            <TextField
-              label="TC Kimlik Numarası"
-              variant="outlined"
-              fullWidth
-              value={customerId}
-              onChange={(e) => setCustomerId(e.target.value)}
-            />
-          </div>
-
-          <div style={{ marginBottom: "1rem" }}>
-            <TextField
-              label="Misafir Sayısı"
-              variant="outlined"
-              fullWidth
-              type="number"
-              value={guestNumber}
-              onChange={(e) => setGuestNumber(Number(e.target.value))}
-            />
-          </div>
+          {guests.map((guest, index) => (
+            <div
+              key={index}
+              style={{ marginTop: "1rem", marginBottom: "1rem" }}
+            >
+              <TextField
+                label={index === 0 ? "Ad Soyad" : `Misafir ${index} Ad Soyad`}
+                variant="outlined"
+                fullWidth
+                value={guest.name}
+                onChange={(e) =>
+                  handleGuestChange(index, "name", e.target.value)
+                }
+                error={index === 0 && errors.customerName}
+                helperText={
+                  index === 0 && errors.customerName
+                    ? "Müşteri bilgileri boş bırakılamaz."
+                    : ""
+                }
+                style={{ marginBottom: "1rem" }}
+              />
+              <TextField
+                label={
+                  index === 0
+                    ? "Telefon Numarası"
+                    : `Misafir ${index} Telefon Numarası`
+                }
+                variant="outlined"
+                fullWidth
+                value={guest.phone}
+                onChange={(e) =>
+                  handleGuestChange(index, "phone", e.target.value)
+                }
+                error={index === 0 && errors.customerPhone}
+                helperText={
+                  index === 0 && errors.customerPhone
+                    ? "Telefon numarası boş bırakılamaz."
+                    : ""
+                }
+                type="number"
+                style={{ marginBottom: "1rem" }}
+              />
+              <TextField
+                label={
+                  index === 0
+                    ? "TC Kimlik Numarası"
+                    : `Misafir ${index} TC Kimlik`
+                }
+                variant="outlined"
+                fullWidth
+                value={guest.nationalId}
+                onChange={(e) =>
+                  handleGuestChange(index, "nationalId", e.target.value)
+                }
+              />
+            </div>
+          ))}
 
           <div style={{ marginBottom: "1rem" }}>
             <TextField
@@ -274,11 +313,12 @@ export default function AddUpdateReservationModal({
               checkOutDate={checkOutDate}
               setCheckInDate={setCheckInDate}
               setCheckOutDate={setCheckOutDate}
-              errors={errors} // Hata durumlarını prop olarak gönderiyoruz
+              errors={errors}
             />
           </div>
         </DialogContent>
         <DialogActions>
+          <Button onClick={handleAddGuest}>Misafir Ekle</Button>
           <Button onClick={handleSave}>Kaydet</Button>
         </DialogActions>
       </BootstrapDialog>

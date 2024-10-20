@@ -21,9 +21,7 @@ const useUpdateRoom = (): UseMutationResult<IRoom, AxiosError, IRoom> => {
         if (!oldRooms) return [];
 
         // Güncellenen oda mevcut listenin içinde mi kontrol edelim
-        return oldRooms.map((room) =>
-          room.id === updatedRoom.id ? updatedRoom : room
-        );
+        queryClient.invalidateQueries("rooms");
       });
 
       toast.success("Oda başarıyla güncellendi!");

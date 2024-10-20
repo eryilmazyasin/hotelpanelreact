@@ -51,15 +51,18 @@ export default function RoomItem(props: IProps) {
           }
         >
           <span>{room.room_type}</span>
-          {room.isReserved && room.is_available && room.Customer && (
-            <div className="reservation-info">
-              <span className="reservation-name">
-                <CheckIcon /> {room.Customer.first_name}
-              </span>
+          {room.isReserved &&
+            room.is_available &&
+            room.Customers &&
+            room.Customers.length > 0 && (
+              <div className="reservation-info">
+                <span className="reservation-name">
+                  <CheckIcon /> {room.Customers[0].first_name}
+                </span>
 
-              {room.description && <span>{room.description}</span>}
-            </div>
-          )}
+                {room.description && <span>{room.description}</span>}
+              </div>
+            )}
 
           {!room.is_available && (
             <span>

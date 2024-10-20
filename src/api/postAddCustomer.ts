@@ -1,8 +1,9 @@
 import axios from "axios";
 
-import { ICustomer } from "../interfaces/interface.ts";
+import { ICustomers } from "../interfaces/interface.ts";
 
-export const postAddCustomer = async (params: ICustomer) => {
-  const response = await axios.post("/api/customers", params);
-  return response.data;
+// postAddCustomer fonksiyonu artık müşteri dizisi alıyor
+export const postAddCustomer = (customers: ICustomers[]) => {
+  debugger;
+  return axios.post("/api/customers", customers); // Toplu müşteri POST isteği
 };

@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 
 import BedroomParentIcon from "@mui/icons-material/BedroomParent";
-import CheckIcon from "@mui/icons-material/Check";
-import DoNotDisturbOnIcon from "@mui/icons-material/DoNotDisturbOn";
-import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -35,18 +32,20 @@ export default function HomePage() {
       </Box>
     );
 
-  if (!rooms && !isLoading) {
-    return (
-      <div className="homepage-empty-list">
-        <BedroomParentIcon className="bedroom-icon" />
-        <span className="text">Henüz oda yok</span>
-        <Button onClick={handleAddClick} variant="outlined">
-          Oda Ekle
-        </Button>
-        <FabAdd onClick={handleAddClick} />
-      </div>
-    );
-  }
+  const renderEmptyList = () => {
+    if (!rooms?.length && !isLoading) {
+      return (
+        <div className="homepage-empty-list">
+          <BedroomParentIcon className="bedroom-icon" />
+          <span className="text">Henüz oda yok</span>
+          <Button onClick={handleAddClick} variant="outlined">
+            Oda Ekle
+          </Button>
+          <FabAdd onClick={handleAddClick} />
+        </div>
+      );
+    }
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }} className="homepage-wrapper">
@@ -66,12 +65,15 @@ export default function HomePage() {
         <hr />
       </div>
 
+      {renderEmptyList()}
+
       <Grid
         container
         spacing={{ xs: 2, md: 2 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
-        {rooms?.length &&
+        {rooms &&
+          rooms.length > 0 &&
           rooms.map((room, index) => (
             <Grid key={index} size={{ xs: 2, sm: 4, md: 3, lg: 2 }}>
               <RoomItem room={room} />
