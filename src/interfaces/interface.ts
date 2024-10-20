@@ -5,7 +5,7 @@ export interface IRoom {
   description: string;
   price_per_night: string;
   is_available: boolean;
-  isReserved?: boolean;
+  is_reserved?: boolean;
   Reservation?: IReservation;
   Customers?: ICustomers[];
 }

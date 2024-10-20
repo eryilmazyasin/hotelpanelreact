@@ -20,7 +20,6 @@ const useUpdateRoom = (): UseMutationResult<IRoom, AxiosError, IRoom> => {
       queryClient.setQueryData<IRoom[]>(["rooms"], (oldRooms) => {
         if (!oldRooms) return [];
 
-        // Güncellenen oda mevcut listenin içinde mi kontrol edelim
         queryClient.invalidateQueries("rooms");
       });
 

@@ -28,6 +28,16 @@ const useDeleteRoom = (): UseMutationResult<number, AxiosError> => {
 
       toast.success("Oda başarıyla silindi!");
     },
+    onError: (data) => {
+      console.log({ data });
+      if (
+        data &&
+        data.response?.data.error ==
+          "Cannot delete a room with active reservations."
+      ) {
+        toast.error("Dolu bir oda silinemez!");
+      }
+    },
   });
 };
 

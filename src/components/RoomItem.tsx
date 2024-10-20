@@ -29,11 +29,13 @@ export default function RoomItem(props: IProps) {
     setRoomModalOpen(value);
   };
 
+  console.log({ room });
+
   return (
     <div>
       <div
         className="card"
-        data-room-is-available={room.is_available && room.isReserved}
+        data-room-is-available={room.is_available && room.is_reserved}
       >
         <div
           className="card-title"
@@ -46,12 +48,12 @@ export default function RoomItem(props: IProps) {
           className="card-body"
           onClick={() =>
             room.is_available &&
-            room.isReserved &&
+            room.is_reserved &&
             handleReservationModalOpenState(true)
           }
         >
           <span>{room.room_type}</span>
-          {room.isReserved &&
+          {room.is_reserved &&
             room.is_available &&
             room.Customers &&
             room.Customers.length > 0 && (
@@ -78,7 +80,7 @@ export default function RoomItem(props: IProps) {
           </div>
         </div>
 
-        {room.is_available && room.isReserved && room.Reservation && (
+        {room.is_available && room.is_reserved && room.Reservation && (
           <div className="date">
             <span>{formatDateToTR(room.Reservation.check_in_date)}</span>
             <br />
@@ -86,7 +88,7 @@ export default function RoomItem(props: IProps) {
           </div>
         )}
 
-        {!room.isReserved && (
+        {!room.is_reserved && (
           <Button
             variant="contained"
             disabled={!room.is_available}

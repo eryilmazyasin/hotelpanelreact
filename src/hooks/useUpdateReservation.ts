@@ -22,20 +22,7 @@ const useUpdateReservation = (): UseMutationResult<
       return updateReservation(params);
     },
     onSuccess: (updatedReservation) => {
-      queryClient.setQueryData<IReservation[]>(
-        ["reservations"],
-        (oldReservations) => {
-          if (!oldReservations) return [];
-
-          // Güncellenen rezervasyonun mevcut listenin içinde olup olmadığını kontrol et
-          return oldReservations.map((reservation) =>
-            reservation.id === updatedReservation.id
-              ? updatedReservation
-              : reservation
-          );
-        }
-      );
-
+      queryClient.invalidateQueries("rooms");
       toast.success("Rezervasyon başarıyla güncellendi!");
     },
     onError: (error) => {

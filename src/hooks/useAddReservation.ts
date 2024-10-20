@@ -30,7 +30,7 @@ const useAddReservation = (): UseMutationResult<
           if (room.id === newReservation.room_id) {
             return {
               ...room,
-              isReserved: true,
+              is_reserved: true,
               Reservation: newReservation,
             };
           }

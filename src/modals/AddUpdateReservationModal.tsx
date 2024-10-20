@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { TextField } from "@mui/material";
@@ -14,6 +16,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 import dayjs, { Dayjs } from "dayjs";
+import ConfirmDialog from "../components/DialogMessage.tsx";
 import ReservationDatePicker from "../components/ReservationDatePicker.tsx";
 import {
   handleNightlyRateBlur,
@@ -52,6 +55,7 @@ export default function AddUpdateReservationModal({
   const [checkInDate, setCheckInDate] = useState<Dayjs | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Dayjs | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const [errors, setErrors] = useState({
     customerName: false,
@@ -132,6 +136,7 @@ export default function AddUpdateReservationModal({
         num_of_guests: guests.length,
         total_price: nightlyRate ? parseFloat(nightlyRate) * guests.length : 0,
         price_per_night: parseFloat(nightlyRate),
+        status: "active", // Varsayılan olarak "active" status'ü ekliyoruz
       };
 
       if (
@@ -194,6 +199,33 @@ export default function AddUpdateReservationModal({
     const updatedGuests = [...guests];
     updatedGuests[index][field] = value;
     setGuests(updatedGuests);
+  };
+
+  const handleConfirm = () => {
+    setConfirmOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setConfirmOpen(false);
+  };
+
+  const handleProceed = () => {
+    // İşlemi gerçekleştir
+    axios
+      .post(`/api/reservations/${room?.Reservation?.id}/checkout`)
+      .then((response) => {
+        console.log({ response });
+        if (response.status === 200) {
+          toast.success("Oda başarıyla boşaltıldı.");
+          queryClient.invalidateQueries("rooms");
+        }
+      })
+      .catch((error) => {
+        console.error("Oda boşaltılamadı:", error);
+      });
+
+    setConfirmOpen(false);
+    handleClose();
   };
 
   return (
@@ -318,9 +350,21 @@ export default function AddUpdateReservationModal({
           </div>
         </DialogContent>
         <DialogActions>
+          {room?.is_reserved && (
+            <Button onClick={handleConfirm} color="error">
+              Odayı Boşalt
+            </Button>
+          )}
           <Button onClick={handleAddGuest}>Misafir Ekle</Button>
           <Button onClick={handleSave}>Kaydet</Button>
         </DialogActions>
+
+        <ConfirmDialog
+          title={"Odayı Boşalt"}
+          open={confirmOpen}
+          onClose={handleCloseDialog}
+          onConfirm={handleProceed}
+        />
       </BootstrapDialog>
     </React.Fragment>
   );
