@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+import ConfirmDialog from "../components/DialogMessage.tsx";
 import {
   handleNightlyRateBlur,
   handleNightlyRateChange,
@@ -51,6 +52,7 @@ const AddUpdateRoomModal = ({ open, room, onRoomModalOpenState }: IProps) => {
   const [nightlyRate, setNightlyRate] = useState<any>("");
   const [formattedNightlyRate, setFormattedNightlyRate] = useState<any>(""); // Formatlı değer için yeni bir state
   const [availability, setAvailability] = useState(true);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const [errors, setErrors] = useState({
     roomNumber: false,
@@ -85,6 +87,14 @@ const AddUpdateRoomModal = ({ open, room, onRoomModalOpenState }: IProps) => {
     setNightlyRate(price);
     setFormattedNightlyRate(price);
   }, []);
+
+  const handleConfirm = () => {
+    setConfirmOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setConfirmOpen(false);
+  };
 
   const handleClose = () => {
     onRoomModalOpenState?.(false);
@@ -146,13 +156,8 @@ const AddUpdateRoomModal = ({ open, room, onRoomModalOpenState }: IProps) => {
   const handleDeleteRoom = (event) => {
     event.preventDefault();
 
-    const isConfirmed = window.confirm(
-      "Bu odayı silmek istediğinize emin misiniz?"
-    );
-    if (isConfirmed) {
-      mutateDeleteRoom(room?.id);
-      handleClose();
-    }
+    mutateDeleteRoom(room?.id);
+    handleClose();
   };
 
   return (
@@ -268,7 +273,7 @@ const AddUpdateRoomModal = ({ open, room, onRoomModalOpenState }: IProps) => {
         </DialogContent>
         <DialogActions>
           {room && (
-            <Button onClick={handleDeleteRoom} color="error">
+            <Button onClick={handleConfirm} color="error">
               Odayı Sil
             </Button>
           )}
@@ -277,6 +282,12 @@ const AddUpdateRoomModal = ({ open, room, onRoomModalOpenState }: IProps) => {
             {room ? "Güncelle" : "Kaydet"}
           </Button>
         </DialogActions>
+        <ConfirmDialog
+          title={"Odayı Sil"}
+          open={confirmOpen}
+          onClose={handleCloseDialog}
+          onConfirm={(e) => handleDeleteRoom(e)}
+        />
       </BootstrapDialog>
     </React.Fragment>
   );

@@ -209,7 +209,7 @@ export default function AddUpdateReservationModal({
     setConfirmOpen(false);
   };
 
-  const handleProceed = () => {
+  const handleCheckout = () => {
     // İşlemi gerçekleştir
     axios
       .post(`/api/reservations/${room?.Reservation?.id}/checkout`)
@@ -363,7 +363,7 @@ export default function AddUpdateReservationModal({
           title={"Odayı Boşalt"}
           open={confirmOpen}
           onClose={handleCloseDialog}
-          onConfirm={handleProceed}
+          onConfirm={handleCheckout}
         />
       </BootstrapDialog>
     </React.Fragment>

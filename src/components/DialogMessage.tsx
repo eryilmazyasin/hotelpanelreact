@@ -12,7 +12,7 @@ import {
 interface IProps {
   open: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (e?: any) => void;
   title?: string;
   text?: string;
 }
