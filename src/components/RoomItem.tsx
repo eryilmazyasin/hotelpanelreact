@@ -65,6 +65,8 @@ export default function RoomItem(props: IProps) {
     return null;
   };
 
+  console.log({ sonuc: getDaysUntilCheckOut() });
+
   return (
     <div>
       <div
@@ -106,10 +108,13 @@ export default function RoomItem(props: IProps) {
                 {getDaysUntilCheckOut() !== null &&
                   getDaysUntilCheckOut() === 1 && (
                     <span>
-                      {getDaysUntilCheckOut() !== null
-                        ? `checkout'a ${getDaysUntilCheckOut()} gece kaldı`
-                        : "Kalan gün bilgisi yok"}
+                      {`checkout'a ${getDaysUntilCheckOut()} gece kaldı`}
                     </span>
+                  )}
+
+                {getDaysUntilCheckOut() !== null &&
+                  getDaysUntilCheckOut() === 0 && (
+                    <span>{`Odayı boşaltınız.`}</span>
                   )}
               </div>
             )}
