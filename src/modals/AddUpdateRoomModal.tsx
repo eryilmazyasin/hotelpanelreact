@@ -73,8 +73,6 @@ const AddUpdateRoomModal = ({ open, room, onRoomModalOpenState }: IProps) => {
     setOpenDialog(open);
   }, [open]);
 
-  console.log({ open, room, onRoomModalOpenState, openDialog });
-
   useEffect(() => {
     setRoomNumber(room ? room.room_number : "");
     setRoomType(room ? room.room_type : "");

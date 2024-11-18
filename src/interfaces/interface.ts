@@ -32,4 +32,19 @@ export interface IReservation {
     phone_number: string;
     national_id: string;
   }[];
+  room?: IRoom;
+}
+
+// interfaces/interface.ts
+export interface IRoom {
+  room_number: string;
+  room_type: string;
+}
+
+export interface ICustomer {
+  id: number;
+  first_name: string;
+  phone_number: string;
+  national_id: string;
+  customerReservations: IReservation[];
 }

@@ -1,22 +1,33 @@
-import React, { useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import React, { useState } from "react";
+import { NavLink, Outlet } from "react-router-dom";
 
-import HomeIcon from '@mui/icons-material/Home';
-import LogoutIcon from '@mui/icons-material/Logout'; // Logout iconu ekleyin
-import MenuIcon from '@mui/icons-material/Menu';
-import NotesIcon from '@mui/icons-material/Notes';
-import PersonIcon from '@mui/icons-material/Person';
-import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, Toolbar, Typography } from '@mui/material';
-import './AdminLayout.scss';
-
-import AddRoomModal from '../modals/AddRoomModal';
-
-const drawerWidth = 240;
+import HomeIcon from "@mui/icons-material/Home";
+import LogoutIcon from "@mui/icons-material/Logout"; // Logout iconu ekleyin
+import MenuIcon from "@mui/icons-material/Menu";
+import NotesIcon from "@mui/icons-material/Notes";
+import PersonIcon from "@mui/icons-material/Person";
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import "./AdminLayout.scss";
 
 const AdminLayout: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleDrawerToggle = () => {
+    if (!isMobile) return;
     setMobileOpen(!mobileOpen);
   };
 
@@ -45,14 +56,7 @@ const AdminLayout: React.FC = () => {
           <PersonIcon />
           Müşteriler
         </NavLink>
-        <NavLink
-          to="/notes"
-          className={({ isActive }) => (isActive ? "active" : "")}
-          onClick={handleDrawerToggle}
-        >
-          <NotesIcon />
-          Notlar
-        </NavLink>
+
         <Divider />
         <NavLink
           to="/logout"

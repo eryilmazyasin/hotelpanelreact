@@ -56,10 +56,10 @@ export default function HomePage() {
           <b>Toplam Oda: </b> {rooms?.length}
         </div>
         <div>
-          <b>Dolu Oda: </b> {rooms?.filter((room) => !room.is_available).length}
+          <b>Dolu Oda: </b> {rooms?.filter((room) => room.is_reserved).length}
         </div>
         <div>
-          <b>Boş Oda: </b> {rooms?.filter((room) => room.is_available).length}
+          <b>Boş Oda: </b> {rooms?.filter((room) => !room.is_reserved).length}
         </div>
         <br />
         <hr />

@@ -60,12 +60,10 @@ export default function RoomItem(props: IProps) {
       const currentDate = dayjs().startOf("day"); // Güncel tarih
       const daysUntilCheckOut = checkOutDate.diff(currentDate, "day"); // Kalan gün farkı
 
-      return daysUntilCheckOut >= 0 ? daysUntilCheckOut : "Geçmiş rezervasyon";
+      return daysUntilCheckOut >= 0 ? daysUntilCheckOut : 0;
     }
     return null;
   };
-
-  console.log({ sonuc: getDaysUntilCheckOut() });
 
   return (
     <div>

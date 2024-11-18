@@ -7,8 +7,7 @@ import {
 } from "react-router-dom";
 import AdminLayout from "./layouts/AdminLayout.tsx";
 import HomePage from "./pages/Admin/HomePage.tsx";
-import Settings from "./pages/Admin/Settings.tsx";
-import Profile from "./pages/Admin/Profile.tsx";
+import Customers from "./pages/Admin/Customers.tsx";
 import UnauthPage from "./pages/Unauth/UnauthPage.tsx";
 import PrivateRoute from "./routes/PrivateRoute.tsx";
 import Login from "./pages/Auth/Login.tsx";
@@ -30,8 +29,7 @@ const App = () => {
             <Route path="/" element={<AdminLayout />}>
               {/* Varsayılan sayfa olarak HomePage */}
               <Route index element={<HomePage />} />
-              <Route path="customers" element={<Settings />} />
-              <Route path="notes" element={<Profile />} />
+              <Route path="customers" element={<Customers />} />
               <Route path="logout" element={<Logout />} />
             </Route>
           </Route>

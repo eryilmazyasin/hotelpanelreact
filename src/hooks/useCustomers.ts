@@ -1,20 +1,12 @@
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { useQuery } from "@tanstack/react-query";
 
-import { getCustomers } from "../api/getCustomers";
+import { getCustomers } from "../api/getCustomers.ts";
 
-export interface ICustomers {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  national_id: string;
-  notes: string;
-}
-
-const useCustomers = (): UseQueryResult<ICustomers, AxiosError> => {
+const useCustomers = (searchTerm: string, page: number) => {
   return useQuery({
-    queryKey: ["customers"],
-    queryFn: () => getCustomers(),
+    queryKey: ["customers", searchTerm, page],
+    queryFn: () => getCustomers(searchTerm, page),
   });
 };
+
 export default useCustomers;

@@ -1,31 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import { useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { toast } from "react-hot-toast";
+import { useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
-import CloseIcon from "@mui/icons-material/Close";
-import { TextField } from "@mui/material";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
-import { styled, useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import CloseIcon from '@mui/icons-material/Close';
+import { TextField } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import { styled, useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
-import dayjs, { Dayjs } from "dayjs";
-import ConfirmDialog from "../components/DialogMessage.tsx";
-import ReservationDatePicker from "../components/ReservationDatePicker.tsx";
-import {
-  handleNightlyRateBlur,
-  handleNightlyRateChange,
-  handleNightlyRateFocus,
-} from "../helpers/helpers.ts";
-import useAddReservation from "../hooks/useAddReservation.ts";
-import useUpdateReservation from "../hooks/useUpdateReservation.ts"; // useUpdateReservation hook'unu import ettik
-import { IRoom } from "../interfaces/interface.ts";
+import dayjs, { Dayjs } from 'dayjs';
+import ConfirmDialog from '../components/DialogMessage.tsx';
+import ReservationDatePicker from '../components/ReservationDatePicker.tsx';
+import { handleNightlyRateBlur, handleNightlyRateChange, handleNightlyRateFocus } from '../helpers/helpers.ts';
+import useAddReservation from '../hooks/useAddReservation.ts';
+import useUpdateReservation from '../hooks/useUpdateReservation.ts'; // useUpdateReservation hook'unu import ettik
+import { IRoom } from '../interfaces/interface.ts';
 
 interface IProps {
   open: boolean;
@@ -86,7 +82,6 @@ export default function AddUpdateReservationModal({
         setCheckOutDate(dayjs(room.Reservation.check_out_date));
 
         const customers = room.Customers || [];
-        console.log({ customers });
         const guestList = customers.map((customer: any) => ({
           id: customer.id, // ID'yi burada ekliyoruz
           name: customer.first_name,
@@ -155,12 +150,9 @@ export default function AddUpdateReservationModal({
           customersData: customerData,
         };
 
-        console.log({ payload });
-
         mutateUpdateReservation(payload, {
           onSuccess: () => {
-            console.log("Rezervasyon başarıyla güncellendi.");
-            queryClient.invalidateQueries("reservations"); // Tek bir sorgu için kullanılır
+            queryClient.invalidateQueries({ queryKey: ["reservations"] });
 
             handleClose();
           },
@@ -176,8 +168,7 @@ export default function AddUpdateReservationModal({
 
         mutateAddReservation(payload, {
           onSuccess: () => {
-            console.log("Rezervasyon başarıyla kaydedildi.");
-            queryClient.invalidateQueries("reservations"); // Tek bir sorgu için kullanılır
+            queryClient.invalidateQueries({ queryKey: ["reservations"] });
 
             handleClose();
           },
@@ -214,10 +205,9 @@ export default function AddUpdateReservationModal({
     axios
       .post(`/api/reservations/${room?.Reservation?.id}/checkout`)
       .then((response) => {
-        console.log({ response });
         if (response.status === 200) {
           toast.success("Oda başarıyla boşaltıldı.");
-          queryClient.invalidateQueries("rooms");
+          queryClient.invalidateQueries({ queryKey: ["rooms"] });
         }
       })
       .catch((error) => {

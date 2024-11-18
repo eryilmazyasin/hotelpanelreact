@@ -14,11 +14,9 @@ const useDeleteRoom = (): UseMutationResult<number, AxiosError> => {
 
   return useMutation({
     mutationFn: (id) => {
-      console.log({ id });
       return deleteRoom(id);
     },
     onSuccess: (message, id) => {
-      console.log({ message, id });
       queryClient.setQueryData<IRoom[]>(["rooms"], (oldRooms) => {
         if (!oldRooms) return [];
 
@@ -29,7 +27,6 @@ const useDeleteRoom = (): UseMutationResult<number, AxiosError> => {
       toast.success("Oda başarıyla silindi!");
     },
     onError: (data) => {
-      console.log({ data });
       if (
         data &&
         data.response?.data.error ==

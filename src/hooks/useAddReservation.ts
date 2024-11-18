@@ -23,8 +23,6 @@ const useAddReservation = (): UseMutationResult<
     onSuccess: (newReservation) => {
       const rooms = queryClient.getQueryData<IRoom[]>(["rooms"]);
 
-      console.log({ newReservation });
-
       if (rooms) {
         const updatedRooms = rooms.map((room) => {
           if (room.id === newReservation.room_id) {

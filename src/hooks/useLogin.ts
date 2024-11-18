@@ -24,7 +24,6 @@ const useLogin = (): UseMutationResult<ILoginUser, AxiosError, IParams> => {
       return postLoginUser(params);
     },
     onSuccess: (data) => {
-      console.log({ data });
       login(data.token);
       navigate("/home");
       return data.payload;
