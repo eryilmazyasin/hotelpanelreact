@@ -11,7 +11,9 @@ const queryClient = new QueryClient();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 // Axios global ayarlar
+// axios.defaults.baseURL = "https://api.otelzeki.com";
 axios.defaults.baseURL = "http://localhost:5001";
+axios.defaults.withCredentials = true; // Kimlik bilgilerini gönder
 
 // Her istek öncesi token'ı Authorization başlığına ekleyelim
 axios.interceptors.request.use(
