@@ -1,27 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import { useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { toast } from 'react-hot-toast';
+import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
-import CloseIcon from '@mui/icons-material/Close';
-import { TextField } from '@mui/material';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
-import { styled, useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import CloseIcon from "@mui/icons-material/Close";
+import { TextField } from "@mui/material";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import { styled, useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-import dayjs, { Dayjs } from 'dayjs';
-import ConfirmDialog from '../components/DialogMessage.tsx';
-import ReservationDatePicker from '../components/ReservationDatePicker.tsx';
-import { handleNightlyRateBlur, handleNightlyRateChange, handleNightlyRateFocus } from '../helpers/helpers.ts';
-import useAddReservation from '../hooks/useAddReservation.ts';
-import useUpdateReservation from '../hooks/useUpdateReservation.ts'; // useUpdateReservation hook'unu import ettik
-import { IRoom } from '../interfaces/interface.ts';
+import dayjs, { Dayjs } from "dayjs";
+import ConfirmDialog from "../components/DialogMessage.tsx";
+import ReservationDatePicker from "../components/ReservationDatePicker.tsx";
+import {
+  handleNightlyRateBlur,
+  handleNightlyRateChange,
+  handleNightlyRateFocus,
+} from "../helpers/helpers.ts";
+import useAddReservation from "../hooks/useAddReservation.ts";
+import useUpdateReservation from "../hooks/useUpdateReservation.ts"; // useUpdateReservation hook'unu import ettik
+import { IRoom } from "../interfaces/interface.ts";
 
 interface IProps {
   open: boolean;
@@ -153,6 +157,7 @@ export default function AddUpdateReservationModal({
         mutateUpdateReservation(payload, {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["reservations"] });
+            queryClient.invalidateQueries({ queryKey: ["rooms"] });
 
             handleClose();
           },
@@ -169,7 +174,7 @@ export default function AddUpdateReservationModal({
         mutateAddReservation(payload, {
           onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["reservations"] });
-
+            queryClient.invalidateQueries({ queryKey: ["rooms"] });
             handleClose();
           },
           onError: (error) => {
