@@ -103,47 +103,6 @@ const CustomerList = () => {
                         >
                           Telefon: {customer.phone_number || "Mevcut değil"}
                         </Typography>
-                        {customer.customerReservations &&
-                        customer.customerReservations.length > 0 ? (
-                          customer.customerReservations.map(
-                            (reservation, index) => (
-                              <div key={index} style={{ marginTop: "8px" }}>
-                                <Typography variant="body2" component="span">
-                                  <strong>Oda:</strong>{" "}
-                                  {reservation.room?.room_number
-                                    ? `${reservation.room.room_number} (${reservation.room.room_type})`
-                                    : "Silinmiş (N/A)"}
-                                </Typography>
-                                <br />
-                                <Typography variant="body2" component="span">
-                                  <strong>Giriş Tarihi:</strong>{" "}
-                                  {reservation.check_in_date ||
-                                    "Tarih mevcut değil"}
-                                </Typography>
-                                <br />
-                                <Typography variant="body2" component="span">
-                                  <strong>Çıkış Tarihi:</strong>{" "}
-                                  {reservation.check_out_date ||
-                                    "Tarih mevcut değil"}
-                                </Typography>
-                              </div>
-                            )
-                          )
-                        ) : (
-                          <div style={{ marginTop: "8px" }}>
-                            <Typography variant="body2" component="span">
-                              <strong>Oda:</strong> Kayıt bulunmuyor
-                            </Typography>
-                            <br />
-                            <Typography variant="body2" component="span">
-                              <strong>Giriş Tarihi:</strong> Kayıt bulunmuyor
-                            </Typography>
-                            <br />
-                            <Typography variant="body2" component="span">
-                              <strong>Çıkış Tarihi:</strong> Kayıt bulunmuyor
-                            </Typography>
-                          </div>
-                        )}
                       </>
                     }
                   />

@@ -14,11 +14,14 @@ import {
   useTheme,
 } from "@mui/material";
 
+import { formatToTL } from "../helpers/helpers.ts";
+
 interface Reservation {
   check_in_date: string;
   check_out_date: string;
   price_per_night: string;
   total_price: string;
+  num_of_guests: number;
   room?: {
     room_number: string;
     room_type: string;
@@ -107,6 +110,9 @@ const CustomerInfoModal: React.FC<CustomerInfoModalProps> = ({
                 {reservation.room?.room_type || "Bilinmiyor"})
               </Typography>
               <Typography>
+                <strong>Misafir Sayısı:</strong> {reservation.num_of_guests}
+              </Typography>
+              <Typography>
                 <strong>Giriş Tarihi:</strong> {reservation.check_in_date}
               </Typography>
               <Typography>
@@ -116,7 +122,8 @@ const CustomerInfoModal: React.FC<CustomerInfoModalProps> = ({
                 <strong>Gecelik Fiyat:</strong> ₺{reservation.price_per_night}
               </Typography>
               <Typography>
-                <strong>Toplam Fiyat:</strong> ₺{reservation.total_price}
+                <strong>Toplam Fiyat: </strong>
+                {formatToTL(reservation.total_price)}
               </Typography>
               <hr />
             </div>

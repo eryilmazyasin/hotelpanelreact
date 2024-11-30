@@ -9,7 +9,7 @@ import { Button } from "@mui/material";
 
 import dayjs from "dayjs"; // Day.js importu
 import duration from "dayjs/plugin/duration"; // Day.js plugin for duration
-import { formatDateToTR } from "../helpers/helpers.ts";
+import { formatDateToTR, formatToTL } from "../helpers/helpers.ts";
 import { IRoom } from "../interfaces/interface.ts";
 import AddUpdateReservationModal from "../modals/AddUpdateReservationModal.tsx";
 import AddUpdateRoomModal from "../modals/AddUpdateRoomModal.tsx";
@@ -35,21 +35,21 @@ export default function RoomItem(props: IProps) {
   };
 
   // // Check-in ve Check-out tarihleri arasındaki gün farkını hesaplama
-  // const getStayDuration = () => {
-  //   if (
-  //     room.Reservation &&
-  //     room.Reservation.check_in_date &&
-  //     room.Reservation.check_out_date
-  //   ) {
-  //     const checkInDate = dayjs(room.Reservation.check_in_date).startOf("day"); // Günü başlangıç olarak alıyoruz
-  //     const checkOutDate = dayjs(room.Reservation.check_out_date).startOf(
-  //       "day"
-  //     ); // Günü başlangıç olarak alıyoruz
-  //     const diffInDays = checkOutDate.diff(checkInDate, "day"); // Gün farkı
-  //     return diffInDays;
-  //   }
-  //   return null;
-  // };
+  const getStayDuration = () => {
+    if (
+      room.Reservation &&
+      room.Reservation.check_in_date &&
+      room.Reservation.check_out_date
+    ) {
+      const checkInDate = dayjs(room.Reservation.check_in_date).startOf("day"); // Günü başlangıç olarak alıyoruz
+      const checkOutDate = dayjs(room.Reservation.check_out_date).startOf(
+        "day"
+      ); // Günü başlangıç olarak alıyoruz
+      const diffInDays = checkOutDate.diff(checkInDate, "day"); // Gün farkı
+      return diffInDays;
+    }
+    return null;
+  };
 
   // Güncel tarihe göre kalan gün sayısını hesaplama
   const getDaysUntilCheckOut = () => {
@@ -137,6 +137,13 @@ export default function RoomItem(props: IProps) {
             <br />
             <span>{formatDateToTR(room.Reservation.check_out_date)}</span>
             <br />
+          </div>
+        )}
+
+        {room.is_available && room.is_reserved && room.Reservation && (
+          <div className="total-price">
+            <span>Tutar: </span>
+            {formatToTL(room.Reservation.total_price)}
           </div>
         )}
 
