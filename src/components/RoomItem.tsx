@@ -34,23 +34,6 @@ export default function RoomItem(props: IProps) {
     setRoomModalOpen(value);
   };
 
-  // // Check-in ve Check-out tarihleri arasındaki gün farkını hesaplama
-  const getStayDuration = () => {
-    if (
-      room.Reservation &&
-      room.Reservation.check_in_date &&
-      room.Reservation.check_out_date
-    ) {
-      const checkInDate = dayjs(room.Reservation.check_in_date).startOf("day"); // Günü başlangıç olarak alıyoruz
-      const checkOutDate = dayjs(room.Reservation.check_out_date).startOf(
-        "day"
-      ); // Günü başlangıç olarak alıyoruz
-      const diffInDays = checkOutDate.diff(checkInDate, "day"); // Gün farkı
-      return diffInDays;
-    }
-    return null;
-  };
-
   // Güncel tarihe göre kalan gün sayısını hesaplama
   const getDaysUntilCheckOut = () => {
     if (room.Reservation && room.Reservation.check_out_date) {

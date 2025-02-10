@@ -1,5 +1,7 @@
 // currencyHelper.js
 
+import dayjs from "dayjs";
+
 // Sayıyı Türk Lirası formatına çeviren fonksiyon
 export const formatToTL = (value) => {
   if (value === null || value === undefined || value === "") {
@@ -52,4 +54,15 @@ export const formatDateToTR = (date) => {
     year: "numeric",
   });
   return formattedDate;
+};
+
+// // Check-in ve Check-out tarihleri arasındaki gün farkını hesaplama
+export const getStayDuration = (_checkInDate, _checkOutDate) => {
+  if (_checkInDate && _checkOutDate) {
+    const checkInDate = dayjs(_checkInDate).startOf("day"); // Günü başlangıç olarak alıyoruz
+    const checkOutDate = dayjs(_checkOutDate).startOf("day"); // Günü başlangıç olarak alıyoruz
+    const diffInDays = checkOutDate.diff(checkInDate, "day"); // Gün farkı
+    return diffInDays;
+  }
+  return null;
 };

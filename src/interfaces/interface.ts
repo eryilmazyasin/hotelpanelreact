@@ -26,6 +26,7 @@ export interface IReservation {
   num_of_guests?: number;
   total_price?: number;
   price_per_night?: number;
+  paid_amount?: number;
   customersData?: {
     first_name: string;
     last_name?: string;

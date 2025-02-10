@@ -19,6 +19,7 @@ import dayjs, { Dayjs } from "dayjs";
 import ConfirmDialog from "../components/DialogMessage.tsx";
 import ReservationDatePicker from "../components/ReservationDatePicker.tsx";
 import {
+  getStayDuration,
   handleNightlyRateBlur,
   handleNightlyRateChange,
   handleNightlyRateFocus,
@@ -51,7 +52,11 @@ export default function AddUpdateReservationModal({
     { id: null, name: "", phone: "", nationalId: "" },
   ]);
   const [nightlyRate, setNightlyRate] = useState("");
+  const [paidRate, setPaidRate] = useState("");
+  const [leftAmount, setLeftAmount] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(room?.Reservation?.total_price);
   const [formattedNightlyRate, setFormattedNightlyRate] = useState<any>("");
+  const [formattedPaidRate, setFormattedPaidRate] = useState<any>("");
   const [checkInDate, setCheckInDate] = useState<Dayjs | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Dayjs | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -77,9 +82,15 @@ export default function AddUpdateReservationModal({
 
   useEffect(() => {
     if (room) {
-      const roomPrice = room.price_per_night;
-      setNightlyRate(roomPrice);
+      const roomPrice = room.Reservation?.price_per_night;
+      const paidPrice = room.Reservation?.paid_amount;
+
+      console.log({ room });
+      setNightlyRate(roomPrice?.toString() || "");
       handleNightlyRateBlur(roomPrice, setFormattedNightlyRate);
+
+      setPaidRate(paidPrice?.toString() || "");
+      handleNightlyRateBlur(paidPrice, setFormattedPaidRate);
 
       if (room.Reservation) {
         setCheckInDate(dayjs(room.Reservation.check_in_date));
@@ -97,10 +108,24 @@ export default function AddUpdateReservationModal({
     } else {
       setGuests([{ id: null, name: "", phone: "", nationalId: "" }]);
       setNightlyRate("");
+      setPaidRate("");
       setCheckInDate(null);
       setCheckOutDate(null);
     }
   }, [room]);
+
+  useEffect(() => {
+    const diffInDays = getStayDuration(checkInDate, checkOutDate);
+
+    console.log({ diffInDays });
+
+    const totalPrice = diffInDays ? parseFloat(nightlyRate) * diffInDays : 0;
+
+    const leftAmount = totalPrice - parseFloat(paidRate);
+
+    setTotalPrice(totalPrice);
+    setLeftAmount(leftAmount);
+  }, [nightlyRate, checkInDate, checkOutDate, paidRate]);
 
   const handleClose = () => {
     onReservationModalOpenState?.(false);
@@ -135,6 +160,7 @@ export default function AddUpdateReservationModal({
         num_of_guests: guests.length,
         total_price: nightlyRate ? parseFloat(nightlyRate) * guests.length : 0,
         price_per_night: parseFloat(nightlyRate),
+        paid_amount: parseFloat(paidRate),
         status: "active", // Varsayılan olarak "active" status'ü ekliyoruz
       };
 
@@ -331,6 +357,47 @@ export default function AddUpdateReservationModal({
               onFocus={() =>
                 handleNightlyRateFocus(nightlyRate, setFormattedNightlyRate)
               }
+            />
+          </div>
+
+          <div style={{ marginBottom: "1rem" }}>
+            <TextField
+              label="Toplam Ücret"
+              variant="outlined"
+              fullWidth
+              type="text"
+              value={totalPrice}
+              disabled
+            />
+          </div>
+
+          <div style={{ marginBottom: "1rem" }}>
+            <TextField
+              label="Alınan Ücret"
+              variant="outlined"
+              fullWidth
+              type="text"
+              value={formattedPaidRate}
+              onChange={(e) =>
+                handleNightlyRateChange(e, setPaidRate, setFormattedPaidRate)
+              }
+              onBlur={() =>
+                handleNightlyRateBlur(paidRate, setFormattedPaidRate)
+              }
+              onFocus={() =>
+                handleNightlyRateFocus(paidRate, setFormattedPaidRate)
+              }
+            />
+          </div>
+
+          <div style={{ marginBottom: "1rem" }}>
+            <TextField
+              label="Kalan Ücret"
+              variant="outlined"
+              fullWidth
+              type="text"
+              value={leftAmount}
+              disabled
             />
           </div>
 
