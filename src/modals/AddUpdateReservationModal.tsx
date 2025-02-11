@@ -85,7 +85,6 @@ export default function AddUpdateReservationModal({
       const roomPrice = room.Reservation?.price_per_night;
       const paidPrice = room.Reservation?.paid_amount;
 
-      console.log({ room });
       setNightlyRate(roomPrice?.toString() || "");
       handleNightlyRateBlur(roomPrice, setFormattedNightlyRate);
 
@@ -116,8 +115,6 @@ export default function AddUpdateReservationModal({
 
   useEffect(() => {
     const diffInDays = getStayDuration(checkInDate, checkOutDate);
-
-    console.log({ diffInDays });
 
     const totalPrice = diffInDays ? parseFloat(nightlyRate) * diffInDays : 0;
 
