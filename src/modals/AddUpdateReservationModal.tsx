@@ -82,8 +82,10 @@ export default function AddUpdateReservationModal({
 
   useEffect(() => {
     if (room) {
-      const roomPrice = room.Reservation?.price_per_night;
-      const paidPrice = room.Reservation?.paid_amount;
+      const roomPrice = room.Reservation
+        ? room.Reservation?.price_per_night
+        : room.price_per_night;
+      const paidPrice = room.Reservation ? room.Reservation?.paid_amount : 0;
 
       setNightlyRate(roomPrice?.toString() || "");
       handleNightlyRateBlur(roomPrice, setFormattedNightlyRate);
@@ -118,7 +120,7 @@ export default function AddUpdateReservationModal({
 
     const totalPrice = diffInDays ? parseFloat(nightlyRate) * diffInDays : 0;
 
-    const leftAmount = totalPrice - parseFloat(paidRate);
+    const leftAmount = totalPrice - parseFloat(paidRate) || 0;
 
     setTotalPrice(totalPrice);
     setLeftAmount(leftAmount);
@@ -375,9 +377,10 @@ export default function AddUpdateReservationModal({
               fullWidth
               type="text"
               value={formattedPaidRate}
-              onChange={(e) =>
-                handleNightlyRateChange(e, setPaidRate, setFormattedPaidRate)
-              }
+              onChange={(e) => {
+                // Eğer kullanıcı boşaltmaya çalışıyorsa, değeri sıfır yap.
+                handleNightlyRateChange(e, setPaidRate, setFormattedPaidRate);
+              }}
               onBlur={() =>
                 handleNightlyRateBlur(paidRate, setFormattedPaidRate)
               }
